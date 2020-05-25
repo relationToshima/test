@@ -4,6 +4,8 @@
     <title>テスト</title>
 </head>
 <body>
-<p th:each="userInfo : ${UserInfo}" th:text="${UserInfo.id}" />
+	<tr th:each="userInfo : ${UserInfo}">
+		<td th:text = "${userInfo.id}">
+	</tr>
 </body>
 </html>
