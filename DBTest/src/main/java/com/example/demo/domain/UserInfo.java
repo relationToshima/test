@@ -10,26 +10,26 @@ import lombok.Data;
 @Component
 @Data
 public class UserInfo{
-	/** 社員番号 */
+		/** 社員番号 */
 	    private String id;
 	    /** フリガナ */
-	    private String namereading;
+	    private String nameReading;
 	    /** 氏名 */
 	    private String name;
 	    /** メールアドレス */
-	    private String mailaddress;
+	    private String mailAddress;
 	    /** パスワード */
 	    private String password;
 	    /** 認証失敗回数 */
-	    private String failuretimes;
+	    private String failureTimes;
 	    /** 最終ログイン日 */
-	    private String lastlogindate;
+	    private String lastLoginDate;
 	    /** 登録者 */
 	    private String registrant;
 	    /** 登録日 */
-	    private String registrationdate;
+	    private String registrationDate;
 	    /** 更新者 */
 	    private String updater;
 	    /** 更新日 */
-	    private String updateddate;
+	    private String updatedDate;
 }

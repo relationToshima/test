@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.example.demo.domain.UserInfo;
+import com.example.demo.domain.SalaryInfo;
 
 @Mapper
-public interface UserInfoMapper {
-	List<UserInfo> selectAll();
+public interface SalaryInfoMapper {
+	List<SalaryInfo> selectAll();
 }

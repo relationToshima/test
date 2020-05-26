@@ -4,8 +4,17 @@
     <title>テスト</title>
 </head>
 <body>
-	<tr th:each="userInfo : ${UserInfo}">
-		<td th:text = "${userInfo.id}">
-	</tr>
+	<table border="1">
+		<tr>
+		<th>名前</th><th>役職</th><th>給与</th>
+		</tr>
+		<tr th:each="userInfo,stat: ${UserInfo}">
+			<td th:text = "${userInfo.name}"></td>
+			<td th:text = "${SalaryInfo[__${stat.index}__].position}"></td>
+			<td th:text = "${Salary[__${stat.index}__]}"></td>
+
+
+		</tr>
+	</table>
 </body>
 </html>
