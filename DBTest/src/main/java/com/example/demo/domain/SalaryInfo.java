@@ -11,9 +11,9 @@ import lombok.Data;
 @Data
 public class SalaryInfo {
 	/** 社員番号 **/
-	private String id;
+	String id;
 	/** 役職 **/
-	private String position;
+	String position;
 	/** 基本給 **/
-	private int basicSalary;
+	int basicSalary;
 }
