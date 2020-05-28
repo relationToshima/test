@@ -7,6 +7,6 @@ import org.apache.ibatis.annotations.Mapper;
 import com.example.demo.domain.OfficeWorker;
 
 @Mapper
-public interface OfficeWorkerMapper {
-	List<OfficeWorker> selectNameSalary(String data);
+public interface MenberMapper {
+	List<OfficeWorker> selectNamePositionSalaryFromMenber();
 }

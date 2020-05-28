@@ -8,48 +8,29 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.demo.domain.OfficeWorker;
-import com.example.demo.mapper.OfficeWorkerMapper;
-import com.example.demo.mapper.SalaryInfoMapper;
-import com.example.demo.mapper.UserInfoMapper;
+import com.example.demo.officeWorker.Administrater;
+import com.example.demo.officeWorker.Menber;
 
 @Controller
 public class UserInfoController {
 
 	@Autowired
-	UserInfoMapper userInfoMapper;
+	Administrater administrater;
 	@Autowired
-	SalaryInfoMapper salaryInfoMapper;
-	@Autowired
-	OfficeWorkerMapper officeWorkerMapper;
+	Menber menber;
 
 	@RequestMapping(value="/test")
 	public String UserInfo(Model model) {
 
-		/*
-		//ユーザー情報を取得
-		List<UserInfo> userInfoList = userInfoMapper.selectAll();
-		model.addAttribute("UserInfo",userInfoList);
+		/*従業員名・役職・基本給・基本給＋役職手当を取得*/
 
-		//給与情報を取得
-		List<SalaryInfo> salaryInfoList = salaryInfoMapper.selectAll();
-		model.addAttribute("SalaryInfo",salaryInfoList);
+		//管理者の取得
+		List<OfficeWorker> adminList =  administrater.DBSelect();
+		model.addAttribute("Admin",adminList);
 
-		//各人の給与計算
-		List<Integer> salaryInfo = new ArrayList<Integer>();
-		for(SalaryInfo salaryInfoTmpList : salaryInfoList) {
-
-			if(salaryInfoTmpList.getPosition().trim().equals("Administrater")) {
-				salaryInfo.add((int) (salaryInfoTmpList.getBasicSalary()*1.25));
-			}else {
-				salaryInfo.add(salaryInfoTmpList.getBasicSalary());
-			}
-		}
-		model.addAttribute("Salary",salaryInfo);
-		*/
-
-		//従業員名・役職・基本給・基本給＋役職手当を取得
-		List<OfficeWorker> officeWorker = officeWorkerMapper.selectNameSalary();
-		model.addAttribute("data",officeWorker);
+		//メンバーの取得
+		List<OfficeWorker> menberList = menber.DBSelect();
+		model.addAttribute("Menber",menberList);
 
 		return "userInfo";
 	}
