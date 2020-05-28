@@ -1,4 +1,4 @@
-package com.example.demo.officeWorker;
+package com.example.demo.service;
 
 import java.util.List;
 
@@ -7,15 +7,13 @@ import org.springframework.stereotype.Component;
 
 import com.example.demo.domain.OfficeWorker;
 import com.example.demo.mapper.MenberMapper;
-import com.example.demo.myInterface.OfficeWorkerInterface;
 
 @Component
-public class Menber implements OfficeWorkerInterface{
+public class MenberService{
 
 	@Autowired
 	MenberMapper menberMapper;
 
-	@Override
 	public List<OfficeWorker> DBSelect() {
 
 		List<OfficeWorker> menberList = menberMapper.selectNamePositionSalaryFromMenber();
