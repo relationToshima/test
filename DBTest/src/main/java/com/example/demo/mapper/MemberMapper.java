@@ -7,6 +7,6 @@ import org.springframework.stereotype.Component;
 import com.example.demo.domain.OfficeWorker;
 
 @Component
-public interface AdministraterMapper {
-	List<OfficeWorker> selectNamePositionSalaryFromAdministrater();
+public interface MemberMapper {
+	List<OfficeWorker> selectNamePositionSalaryFromMember();
 }

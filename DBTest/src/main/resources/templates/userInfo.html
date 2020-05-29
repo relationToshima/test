@@ -8,19 +8,12 @@
 		<tr>
 		<th>名前</th><th>役職</th><th>基本給</th><th>基本給＋役職手当</th>
 		</tr>
-		<tr th:each="data : ${Admin}">
+		<tr th:each="data : ${data}">
 			<td th:text = "${data.name}"></td>
 			<td th:text = "${data.position}"></td>
 			<td th:text = "${data.basicSalary}"></td>
 			<td th:text = "${data.basicSalaryAddPositionAllowance}"></td>
 		</tr>
-		<tr th:each="data : ${Menber}">
-			<td th:text = "${data.name}"></td>
-			<td th:text = "${data.position}"></td>
-			<td th:text = "${data.basicSalary}"></td>
-			<td th:text = "${data.basicSalaryAddPositionAllowance}"></td>
-		</tr>
-
 	</table>
 </body>
 </html>

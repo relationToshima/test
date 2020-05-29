@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
 	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EM"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.demo.mapper.MenberMapper">
+<mapper namespace="com.example.demo.mapper.MemberMapper">
 
-	<select id="selectNamePositionSalaryFromMenber" resultType="com.example.demo.domain.OfficeWorker">
+	<select id="selectNamePositionSalaryFromMember" resultType="com.example.demo.domain.OfficeWorker">
 		select
 			name,
 			position,
@@ -15,6 +15,6 @@
 			userinfo
 		WHERE
 		salaryinfo.id = userinfo.id and
-		position = 'Menber'
+		position = 'Member'
 	</select>
 </mapper>
