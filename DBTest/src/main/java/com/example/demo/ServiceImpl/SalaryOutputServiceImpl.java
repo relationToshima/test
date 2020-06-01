@@ -5,7 +5,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.domain.OfficeWorker;
 import com.example.demo.myInterface.OfficeWorkerInterface;
@@ -13,7 +14,7 @@ import com.example.demo.myInterface.OfficeWorker.Administrater;
 import com.example.demo.myInterface.OfficeWorker.Member;
 import com.example.demo.service.SalaryOutputService;
 
-@Component
+@Service
 public class SalaryOutputServiceImpl implements SalaryOutputService {
 
     @Autowired
@@ -24,6 +25,7 @@ public class SalaryOutputServiceImpl implements SalaryOutputService {
     }
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<OfficeWorker> SalaryCalculationOutput() {
 
 		//管理者の給与情報を取得

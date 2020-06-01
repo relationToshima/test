@@ -8,4 +8,26 @@
 		select *
 		from userinfo
 	</select>
+
+	<select id="selectMaxId" resultType="String">
+		select max(id)
+		from userinfo
+	</select>
+
+	<insert id="insertUserInfo">
+		insert into userinfo(
+			id,
+			namereading,
+			name,
+			mailaddress,
+			password,
+			registrant)
+		values (
+			#{userInfoToInsert.id},
+			#{userInfoToInsert.nameReading},
+			#{userInfoToInsert.name},
+			#{userInfoToInsert.mailAddress},
+			#{userInfoToInsert.password},
+			#{userInfoToInsert.registrant})
+	</insert>
 </mapper>

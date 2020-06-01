@@ -8,4 +8,16 @@
 		select *
 		from salaryinfo
 	</select>
+
+	<insert id="insertSalaryInfo">
+		insert into salaryinfo(
+			id,
+			position,
+			basicsalary)
+		values (
+			#{salaryInfoToInsert.id},
+			#{salaryInfoToInsert.position},
+			#{salaryInfoToInsert.basicSalary})
+	</insert>
+
 </mapper>
