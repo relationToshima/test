@@ -2,16 +2,16 @@ package com.example.demo.ServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.domain.SalaryInfo;
 import com.example.demo.domain.UserInfo;
 import com.example.demo.mapper.SalaryInfoMapper;
 import com.example.demo.mapper.UserInfoMapper;
 import com.example.demo.service.InsertToUserInfoService;
+import com.example.demo.utils.StringUtils;
 
 @Service
-@Transactional(readOnly = true)
+//@Transactional(readOnly = true)
 public class InsertToUserInfoServiceImpl implements InsertToUserInfoService{
 
 	@Autowired
@@ -19,6 +19,9 @@ public class InsertToUserInfoServiceImpl implements InsertToUserInfoService{
 
 	@Autowired
 	SalaryInfoMapper salaryInfoMapper;
+
+	@Autowired
+	StringUtils stringUtils;
 
 	@Override
 	public boolean UserInfoInsert(UserInfo userInfoToInsert, SalaryInfo salaryInfoToInsert) {
@@ -37,7 +40,6 @@ public class InsertToUserInfoServiceImpl implements InsertToUserInfoService{
 
 			//salaryInfoのインサート
 			salaryInfoMapper.insertSalaryInfo(salaryInfoToInsert);
-
 
 		}catch(Exception e){
 			result = false;

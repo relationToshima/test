@@ -11,11 +11,13 @@ public class StringUtils {
 	 * @param str 文字列
 	 * @return 文字列がNULLもしくは空文字("")の場合、true
 	 */
-	private boolean StringIsNullOrEmptyString(String str) {
+	public boolean StringIsNullOrEmptyString(String str) {
 
 		boolean ans = false;
 
-		if(str.equals("") || str.equals(null)) {
+		if(str == null) {
+			ans = true;
+		}else if(str.isEmpty()) {
 			ans = true;
 		}
 
