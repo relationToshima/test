@@ -5,6 +5,6 @@ import com.example.demo.domain.UserInfo;
 
 public interface InsertToUserInfoService {
 
-	boolean UserInfoInsert(UserInfo userinfoToInsert , SalaryInfo salaryInfoToInsert);
+	boolean UserInfoInsert(UserInfo userinfoToInsert, SalaryInfo salaryInfoToInsert);
 
 }

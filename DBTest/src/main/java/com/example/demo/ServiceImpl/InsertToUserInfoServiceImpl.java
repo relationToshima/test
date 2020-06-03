@@ -12,7 +12,7 @@ import com.example.demo.utils.StringUtils;
 
 @Service
 //@Transactional(readOnly = true)
-public class InsertToUserInfoServiceImpl implements InsertToUserInfoService{
+public class InsertToUserInfoServiceImpl implements InsertToUserInfoService {
 
 	@Autowired
 	UserInfoMapper userInfoMapper;
@@ -41,7 +41,7 @@ public class InsertToUserInfoServiceImpl implements InsertToUserInfoService{
 			//salaryInfoのインサート
 			salaryInfoMapper.insertSalaryInfo(salaryInfoToInsert);
 
-		}catch(Exception e){
+		} catch (Exception e) {
 			result = false;
 		}
 

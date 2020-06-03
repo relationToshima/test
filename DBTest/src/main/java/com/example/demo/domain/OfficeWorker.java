@@ -9,7 +9,7 @@ import lombok.Data;
  */
 @Component
 @Data
-public class OfficeWorker extends SalaryInfo{
+public class OfficeWorker extends SalaryInfo {
 
 	/** 名前 **/
 	String name;

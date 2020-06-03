@@ -10,7 +10,7 @@ import com.example.demo.mapper.AdministraterMapper;
 import com.example.demo.myInterface.OfficeWorkerInterface;
 
 @Component
-public class Administrater implements OfficeWorkerInterface{
+public class Administrater implements OfficeWorkerInterface {
 
 	@Autowired
 	AdministraterMapper administraterMapper;

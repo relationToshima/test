@@ -10,7 +10,7 @@ import com.example.demo.mapper.MemberMapper;
 import com.example.demo.myInterface.OfficeWorkerInterface;
 
 @Component
-public class Member implements OfficeWorkerInterface{
+public class Member implements OfficeWorkerInterface {
 
 	@Autowired
 	MemberMapper memberMapper;
@@ -20,6 +20,5 @@ public class Member implements OfficeWorkerInterface{
 		List<OfficeWorker> menberList = memberMapper.selectNamePositionSalaryFromMember();
 		return menberList;
 	}
-
 
 }

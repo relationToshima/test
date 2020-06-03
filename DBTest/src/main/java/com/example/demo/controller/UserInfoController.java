@@ -5,76 +5,130 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.example.demo.ServiceImpl.InsertToUserInfoServiceImpl;
 import com.example.demo.ServiceImpl.SalaryOutputServiceImpl;
+import com.example.demo.ServiceImpl.UserInfoDeleteServiceImpl;
+import com.example.demo.ServiceImpl.UserInfoRegisterServiceImpl;
 import com.example.demo.domain.OfficeWorker;
-import com.example.demo.domain.SalaryInfo;
-import com.example.demo.domain.UserInfo;
+import com.example.demo.formDetail.UserInfoDeleteFormDetail;
+import com.example.demo.formDetail.UserInfoRegisterFormDetail;
 
 @Controller
 public class UserInfoController {
 
-    @Autowired
-    SalaryOutputServiceImpl salaryOutputServiceImpl;
-    @Autowired
-    InsertToUserInfoServiceImpl inertToUserInfoServiceImpl;
+	@Autowired
+	SalaryOutputServiceImpl salaryOutputServiceImpl;
+	@Autowired
+	InsertToUserInfoServiceImpl inertToUserInfoServiceImpl;
+	@Autowired
+	UserInfoRegisterServiceImpl userInfoRegisterServiceImpl;
+	@Autowired
+	UserInfoDeleteServiceImpl userInfoDeleteServiceImpl;
 
-	@RequestMapping(value = "/test" , method = RequestMethod.GET)
-	public String UserInfo(Model model) {
-
-		/*従業員名・役職・基本給・基本給＋役職手当を取得*/
-		List<OfficeWorker> data = salaryOutputServiceImpl.SalaryCalculationOutput();
-		model.addAttribute("data",data);
-
-		return "userInfo";
+	/**
+	 * topメソッド
+	 * 社員情報管理トップ画面を表示する.
+	 * @return
+	 */
+	@RequestMapping(value = "/top", method = RequestMethod.GET)
+	public String Top() {
+		return "top";
 	}
 
-	@RequestMapping(value = "/insertToReadOnly" , method = RequestMethod.GET)
-	public String InsertTotReadOnly(Model model) {
+	/**
+	 * UserInfoDeleteメソッド
+	 * ユーザー情報削除画面を表示する.
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/UserInfoDelete", method = RequestMethod.GET)
+	public String UserInfoDeleteInit(Model model) {
+		UserInfoDeleteFormDetail userInfoDeleteFormDetail = new UserInfoDeleteFormDetail();
+		userInfoDeleteFormDetail.setUserInfoDeleteFormList(userInfoDeleteServiceImpl.userInfoSelectForDelete());
+		model.addAttribute("UserInfoDeleteFormDetail", userInfoDeleteFormDetail);
+		return "userInfoDelete";
+	}
 
-		//フリガナ
-		String nameReading = "イシイ　ヨンコ";
-		//氏名
-		String name = "石井　四子";
-		//メールアドレス
-		String mailAddress = "yonko.ishii@mail.com";
-		//パスワード
-		String password = "ishii";
-		//登録者
-		String registrant = "田中　太郎";
-		//役職
-		String position = "Member";
-		//基本給
-		int basicSalary = 190000;
+	/**
+	 * UserInfoDeleteメソッド
+	 * 選択したユーザー情報を削除する.
+	 * @param userInfoDeleteFormDetail
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/UserInfoDelete", params = "submit", method = RequestMethod.POST)
+	public String UserInfoDelete(
+			@ModelAttribute("UserInfoDeleteFormDetail") UserInfoDeleteFormDetail userInfoDeleteFormDetail,
+			Model model) {
 
-		UserInfo userInfoToInsert = new UserInfo();
-		userInfoToInsert.setNameReading(nameReading);
-		userInfoToInsert.setName(name);
-		userInfoToInsert.setMailAddress(mailAddress);
-		userInfoToInsert.setPassword(password);
-		userInfoToInsert.setRegistrant(registrant);
+		//確認ポップアップ表示する
 
-		SalaryInfo salaryInfoToInsert = new SalaryInfo();
-		salaryInfoToInsert.setPosition(position);
-		salaryInfoToInsert.setBasicSalary(basicSalary);
+		userInfoDeleteFormDetail = userInfoDeleteServiceImpl.userInfoDelete(userInfoDeleteFormDetail.getCheckBox());
+		model.addAttribute("userInfoDeleteFormDetail", userInfoDeleteFormDetail);
+		return "userInfoDelete";
 
-		boolean result;
-		result = inertToUserInfoServiceImpl.UserInfoInsert(userInfoToInsert, salaryInfoToInsert);
+	}
 
-		if(result == true) {
-			model.addAttribute("result","インサートに成功しました。");
-		}else {
-			model.addAttribute("result","インサートに失敗しました。");
-		}
+	/**
+	 * SalaryInfoListメソッド
+	 * 給与情報一覧画面を出力する.
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/SalaryInfoList", method = RequestMethod.GET)
+	public String SalaryInfoList(Model model) {
 
 		/*従業員名・役職・基本給・基本給＋役職手当を取得*/
-		List<OfficeWorker> data = salaryOutputServiceImpl.SalaryCalculationOutput();
-		model.addAttribute("data",data);
+		List<OfficeWorker> officeWorkerList = salaryOutputServiceImpl.SalaryCalculationOutput();
+		model.addAttribute("data", officeWorkerList);
 
-		return "userInfo";
+		return "salaryInfoList";
+	}
+
+	/**
+	 * UserInfoRegisterメソッド
+	 * ユーザー情報登録画面の初期表示を行う.
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/UserInfoRegister", method = RequestMethod.GET)
+	public String UserInfoRegisterInit(Model model) {
+		UserInfoRegisterFormDetail userInfoRegisterFormDetail = new UserInfoRegisterFormDetail();
+		model.addAttribute("userInfoRegisterFormDetail", userInfoRegisterFormDetail);
+		return "userInfoRegister";
+	}
+
+	/**
+	 * UserIngoRegisterメソッド
+	 * 入力値のデータチェックを行い、ユーザー情報の登録を行う.
+	 * @param userInfoRegisterFormDetail , model
+	 * @return
+	 */
+	@RequestMapping(value = "/UserInfoRegister", params = "submit", method = RequestMethod.POST)
+	public String UserInfoRegister(
+			@ModelAttribute("userInfoRegisterFormDetail") UserInfoRegisterFormDetail userInfoRegisterFormDetail,
+			Model model) {
+
+		userInfoRegisterFormDetail = userInfoRegisterServiceImpl.UserInfoRegister(userInfoRegisterFormDetail);
+		model.addAttribute("userInfoRegisterFormDetail", userInfoRegisterFormDetail);
+		return "userInfoRegister";
+
+	}
+
+	/**
+	 * backメソッド
+	 * 給与情報一覧画面に戻る.
+	 * @return
+	 */
+	@RequestMapping(value = "/UserInfoRegister", params = "back", method = RequestMethod.GET)
+	public String back() {
+		System.out.println("aaa");
+		return "salaryInfoList";
+
 	}
 
 }

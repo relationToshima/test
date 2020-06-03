@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper
-	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EM"
-	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EM" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.mapper.UserInfoMapper">
 
 	<select id="selectAll" resultType="com.example.demo.domain.UserInfo">
 		select *
 		from userinfo
 	</select>
+
+	<select id="selectIdName" resultType="com.example.demo.form.UserInfoDeleteForm">
+		select id,
+			   name
+		from userinfo
+	</select>
+
+	<delete id="deleteData">
+		delete from userinfo
+		where id =#{idList}
+	</delete>
 
 	<select id="selectMaxId" resultType="String">
 		select max(id)

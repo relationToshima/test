@@ -17,12 +17,12 @@ import com.example.demo.service.SalaryOutputService;
 @Service
 public class SalaryOutputServiceImpl implements SalaryOutputService {
 
-    @Autowired
-    private AutowireCapableBeanFactory factory;
+	@Autowired
+	private AutowireCapableBeanFactory factory;
 
-    private <T> T createAutowiredObject(Class<T> c){
-        return factory.createBean(c);
-    }
+	private <T> T createAutowiredObject(Class<T> c) {
+		return factory.createBean(c);
+	}
 
 	@Override
 	@Transactional(readOnly = true)

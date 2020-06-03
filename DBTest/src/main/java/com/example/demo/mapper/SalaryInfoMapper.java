@@ -6,8 +6,8 @@ import org.apache.ibatis.annotations.Param;
 
 import com.example.demo.domain.SalaryInfo;
 
-
 public interface SalaryInfoMapper {
 	List<SalaryInfo> selectAll();
-	boolean insertSalaryInfo(@Param ("salaryInfoToInsert") SalaryInfo salaryInfoToInsert);
+
+	boolean insertSalaryInfo(@Param("salaryInfoToInsert") SalaryInfo salaryInfoToInsert);
 }

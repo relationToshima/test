@@ -1,0 +1,27 @@
+
+<html>
+<head>
+<meta charset="utf-8" />
+<title>ユーザー情報削除</title>
+</head>
+<body>
+	<a href="/top"><button type="button">戻る</button></a>
+	<p th:text="${userInfoDeleteFormDetail.message}"></p>
+	<form action="/UserInfoDelete" th:object="${userInfoDeleteFormDetail}" method="POST">
+		<table border="1">
+			<tr>
+				<th>削除対象</th>
+				<th>ID</th>
+				<th>名前</th>
+			</tr>
+			<tr th:each="data : ${UserInfoDeleteFormDetail.userInfoDeleteFormList}">
+				<td><input type ="checkbox" name="checkBox" th:value="${data.id}"></input></td>
+				<td><p th:text="${data.id}"></p></td>
+				<td><p th:text="${data.name}"></p></td>
+			</tr>
+		</table>
+		<input type="submit" value="削除" name="submit"></input>
+	</form>
+
+</body>
+</html>
