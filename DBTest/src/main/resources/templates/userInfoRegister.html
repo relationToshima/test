@@ -5,7 +5,7 @@
 <title>ユーザー情報登録</title>
 </head>
 <body>
-	<a href="/UserInfo"><button type="button">戻る</button></a>
+	<a href="/top"><button type="button">戻る</button></a>
 	<p th:text="${userInfoRegisterFormDetail.message}"></p>
 
 	<form action="/UserInfoRegister" th:object="${userInfoRegisterFormDetail}" method="POST">

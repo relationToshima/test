@@ -1,5 +1,7 @@
 package com.example.demo.utils;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -73,6 +75,22 @@ public class StringUtils {
 			ans = str;
 		}
 		return ans;
+	}
+
+	/**
+	 * getNowDateメソッド
+	 * 現在の日付をString[YYYY-MM-DD]形式で返却する.
+	 * @return
+	 */
+	public String getNowDate() {
+
+		Calendar cal = Calendar.getInstance();
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+		String date = sdf.format(cal.getTime());
+
+		return date;
 	}
 
 }

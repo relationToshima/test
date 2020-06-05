@@ -6,7 +6,7 @@ import com.example.demo.form.UserInfoDeleteForm;
 import com.example.demo.formDetail.UserInfoDeleteFormDetail;
 
 public interface UserInfoDeleteService {
-	UserInfoDeleteFormDetail userInfoDelete(String[] checkBox);
+	UserInfoDeleteFormDetail userInfoDelete(UserInfoDeleteFormDetail userInfoDeleteFormDetail);
 
 	List<UserInfoDeleteForm> userInfoSelectForDelete();
 }

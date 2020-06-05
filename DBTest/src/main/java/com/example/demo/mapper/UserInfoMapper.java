@@ -7,15 +7,26 @@ import org.apache.ibatis.annotations.Param;
 
 import com.example.demo.domain.UserInfo;
 import com.example.demo.form.UserInfoDeleteForm;
+import com.example.demo.form.UserInfoSearchForm;
+import com.example.demo.form.UserInfoUpdateListForm;
+import com.example.demo.formDetail.UserInfoUpdateFormDetail;
 
 public interface UserInfoMapper {
 	List<UserInfo> selectAll();
 
-	List<UserInfoDeleteForm> selectIdName();
+	List<UserInfoDeleteForm> selectIdNameForDalete();
+
+	List<UserInfoUpdateListForm> selectIdNameForUpdateList();
+
+	UserInfoUpdateFormDetail selectUserInfoForUpdate(String id);
+
+	void updateUserInfo(UserInfoUpdateFormDetail userInfoUpdateFormDetail);
 
 	void deleteData(String idList);
 
 	String selectMaxId();
 
 	boolean insertUserInfo(@Param("userInfoToInsert") UserInfo userInfoToInsert) throws SQLException;
+
+	List<UserInfoSearchForm> selectUserInfoForSearch();
 }

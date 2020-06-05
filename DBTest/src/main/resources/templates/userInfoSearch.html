@@ -1,0 +1,152 @@
+
+<html>
+<head>
+<meta charset="utf-8" />
+<title>ユーザー情報検索</title>
+</head>
+<body>
+	<a href="/top"><button type="button">戻る</button></a>
+	<form action="/UserInfoSearch" th:object="${userInfoSearchFormDetail}" method="POST">
+		<table>
+			<tr>
+				<td>
+					<table>
+						<tr>
+							<td>
+								<table frame="box">
+									<tr>
+										<td>
+											<p>検索列</p>
+											<select name="selectColumnsForSearchStr">
+												<option value="">---</option>
+												<option th:each="data : *{selectColumnsForSearch}" th:value="${data}" th:text="${data}"></option>
+											</select>
+											<input type="hidden" name="selectColumnsForSearch" th:value="*{selectColumnsForSearch}"></input>
+										</td>
+										<td>
+											<p>検索キー</p>
+											<p><input type="text" name="searchKey" th:value="*{searchKey}"></input></p>
+										</td>
+									</tr>
+								</table>
+							</td>
+							<td>
+								<p><input type="submit" name="searchOff" value="検索解除"></input></p>
+								<p><input type="submit" name="searchOn" value="検索"></input></p>
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td>
+					<table>
+						<tr>
+							<td>
+								<table frame="box">
+									<tr>
+										<td>
+											<p>第１キー</p>
+										</td>
+									<tr>
+										<td>並べ替え列</td>
+										<td>並べ替え順</td>
+									</tr>
+									<tr>
+										<td>
+											<select name="selectColumnsForSort1Str">
+												<option value="">---</option>
+												<option th:each="data : *{selectColumnsForSort1}" th:value="${data}" th:text="${data}"></option>
+											</select>
+											<input type="hidden" name="selectColumnsForSort1" th:value="*{selectColumnsForSort1}"></input>
+										</td>
+										<td>
+											<select name="selectSortOrder1Str">
+												<option value="">---</option>
+												<option th:each="data : *{selectSortOrder1}" th:value="${data}" th:text="${data}"></option>
+											</select>
+											<input type="hidden" name="selectSortOrder1" th:value="*{selectSortOrder1}"></input>
+										</td>
+									</tr>
+								</table>
+							</td>
+							<td>
+								<table frame="box">
+									<tr>
+										<td>
+											<p>第２キー</p>
+										</td>
+									<tr>
+										<td>並べ替え列</td>
+										<td>並べ替え順</td>
+									</tr>
+									<tr>
+										<td>
+											<select name="selectColumnsForSort2Str">
+												<option value="">---</option>
+												<option th:each="data : *{selectColumnsForSort2}" th:value="${data}" th:text="${data}"></option>
+											</select>
+											<input type="hidden" name="selectColumnsForSort2" th:value="*{selectColumnsForSort2}"></input>
+										</td>
+										<td>
+											<select name="selectSortOrder2Str">
+												<option value="">---</option>
+												<option th:each="data : *{selectSortOrder2}" th:value="${data}" th:text="${data}"></option>
+											</select>
+											<input type="hidden" name="selectSortOrder2" th:value="*{selectSortOrder2}"></input>
+										</td>
+									</tr>
+								</table>
+							</td>
+							<td>
+								<p><input type="submit" name="sortOff" value="並べ替え解除"></input></p>
+								<p><input type="submit" name="sortOn" value="並べ替え"></input></p>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+		<br>
+		<table border="1">
+			<tr>
+				<th>社員番号</th><th>フリガナ</th><th>氏名</th><th>メールアドレス</th><th>認証失敗回数</th><th>最終ログイン日</th><th>登録者</th><th>登録日</th><th>更新者</th><th>更新日</th><th>役職</th>
+			</tr>
+			<tr th:each="data:${userInfoSearchFormDetail.userInfoSearchFormList}">
+				<td>
+					<p th:text="${data.id}"></p>
+				</td>
+				<td>
+					<p th:text="${data.nameReading}"></p>
+				</td>
+				<td>
+					<p th:text="${data.name}"></p>
+				</td>
+				<td>
+					<p th:text="${data.mailAddress}"></p>
+				</td>
+				<td>
+					<p th:text="${data.failureTimes}"></p>
+				</td>
+				<td>
+					<p th:text="${data.lastLoginDate}"></p>
+				</td>
+				<td>
+					<p th:text="${data.registrant}"></p>
+				</td>
+				<td>
+					<p th:text="${data.registrationDate}"></p>
+				</td>
+				<td>
+					<p th:text="${data.updater}"></p>
+				</td>
+				<td>
+					<p th:text="${data.updatedDate}"></p>
+				</td>
+				<td>
+					<p th:text="${data.position}"></p>
+				</td>
+			</tr>
+		</table>
+	</form>
+
+</body>
+</html>

@@ -74,9 +74,9 @@ public class UserInfoRegisterServiceImpl implements UserInfoRegisterService {
 			form.setInputName("");
 			form.setInputPosition("");
 			form.setInputBasicSalary("");
-			form.setMessage(ConstantsMsg.MSG_OK);
+			form.setMessage(ConstantsMsg.MSG_REGISTER_OK);
 		} else {
-			form.setMessage(ConstantsMsg.MSG_NG);
+			form.setMessage(ConstantsMsg.MSG_REGISTER_NG);
 		}
 
 		return form;

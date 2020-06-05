@@ -1,0 +1,36 @@
+
+<html>
+<head>
+<meta charset="utf-8" />
+<title>ユーザー情報更新一覧</title>
+</head>
+<body>
+	<a href="/top"><button type="button">戻る</button></a>
+	<p th:text="${userInfoUpdateListFormDetail.message}"></p>
+
+	<form action="/UserInfoUpdateList" th:object="${userInfoUpdateListFormDetail}" method="POST">
+		<table border="1">
+			<tr>
+				<th>更新対象</th>
+				<th>ID</th>
+				<th>名前</th>
+			</tr>
+			<tr th:each="data , stat : ${userInfoUpdateListFormDetail.userInfoUpdateListFormList}">
+				<td>
+					<input type="radio" name="radio" th:value="${data.id}" th;field="userInfoUpdateFormDetail"></input>
+				</td>
+				<td>
+					<p th:text="${data.id}"></p>
+					<input type ="hidden" th:name="userInfoUpdateListFormList[__${stat.index}__].id" th:value="${data.id}"></input>
+				</td>
+				<td>
+					<p th:text ="${data.name}"></p>
+					<input type ="hidden" th:name="userInfoUpdateListFormList[__${stat.index}__].name" th:value="${data.name}"></input>
+				</td>
+			</tr>
+		</table>
+		<input type="submit" name="submit" value="確定"></input>
+	</form>
+
+</body>
+</html>

@@ -3,34 +3,86 @@
 <mapper namespace="com.example.demo.mapper.UserInfoMapper">
 
 	<select id="selectAll" resultType="com.example.demo.domain.UserInfo">
-		select *
-		from userinfo
+		select
+			*
+		from
+			userinfo
 	</select>
 
-	<select id="selectIdName" resultType="com.example.demo.form.UserInfoDeleteForm">
-		select id,
-			   name
-		from userinfo
+	<select id="selectIdNameForDelete" resultType="com.example.demo.form.UserInfoDeleteForm">
+		select
+			id,
+			 name
+		from
+			userinfo
+		order by id asc
 	</select>
+
+	<select id="selectIdNameForUpdateList" resultType="com.example.demo.form.UserInfoUpdateListForm">
+		select
+			id,
+			name
+		from
+			userinfo
+		order by id asc
+	</select>
+
+	<select id="selectUserInfoForUpdate" resultType="com.example.demo.formDetail.UserInfoUpdateFormDetail">
+		select
+			userinfo.id,
+			nameReading,
+			name,
+			mailAddress,
+			password,
+			position,
+			basicSalary
+		from
+			userinfo,
+			salaryinfo
+		where
+			userinfo.id = salaryinfo.id and
+			userinfo.id=#{id}
+		order by id asc
+	</select>
+
+	<update id="updateUserInfo">
+		update
+			userinfo
+		set
+			namereading = #{nameReading},
+			name = #{name},
+			mailaddress = #{mailAddress},
+			password = #{password},
+			updater = #{updater},
+			updateddate = #{updatedDate}
+		where
+			id = #{id}
+	</update>
 
 	<delete id="deleteData">
-		delete from userinfo
-		where id =#{idList}
+		delete
+		from
+			userinfo
+		where
+			id =#{idList}
 	</delete>
 
 	<select id="selectMaxId" resultType="String">
-		select max(id)
-		from userinfo
+		select
+			max(id)
+		from
+			userinfo
 	</select>
 
 	<insert id="insertUserInfo">
-		insert into userinfo(
-			id,
-			namereading,
-			name,
-			mailaddress,
-			password,
-			registrant)
+		insert into
+			userinfo(
+				id,
+				namereading,
+				name,
+				mailaddress,
+				password,
+				registrant)
 		values (
 			#{userInfoToInsert.id},
 			#{userInfoToInsert.nameReading},
@@ -39,4 +91,25 @@
 			#{userInfoToInsert.password},
 			#{userInfoToInsert.registrant})
 	</insert>
+
+	<select id="selectUserInfoForSearch" resultType="com.example.demo.form.UserInfoSearchForm">
+		select
+			userinfo.id,
+			namereading,
+			name,
+			mailaddress,
+			failuretimes,
+			lastlogindate,
+			registrant,
+			registrationdate,
+			updater,
+			updateddate,
+			position
+		from
+			userinfo,
+			salaryinfo
+		where
+			userinfo.id = salaryinfo.id
+		order by id asc
+	</select>
 </mapper>

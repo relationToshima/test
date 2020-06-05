@@ -1,0 +1,55 @@
+
+<html>
+<head>
+<meta charset="utf-8" />
+<title>ユーザー情報更新</title>
+</head>
+<body>
+	<a href="/top"><button type="button">戻る</button></a>
+	<p th:text="${userInfoUpdateFormDetail.message}"></p>
+
+	<form action="/UserInfoUpdate" th:object="${userInfoUpdateFormDetail}" method="POST">
+		<table>
+			<tr><td>
+				<table border="1">
+					<input type="hidden" th:name="id" th:value="${userInfoUpdateFormDetail.id}">
+					<tr>
+						<th>フリガナ</th>
+						<td><input type="text" name="nameReading" th:value="${userInfoUpdateFormDetail.nameReading}"></input></td>
+					</tr>
+					<tr>
+						<th>氏名</th>
+						<td><input type="text" name="name" th:value="${userInfoUpdateFormDetail.name}"></input></td>
+					</tr>
+					<tr>
+						<th>メールアドレス</th>
+						<td><input type="text" name="mailAddress" th:value="${userInfoUpdateFormDetail.mailAddress}"></input></td>
+					</tr>
+					<tr>
+						<th>パスワード</th>
+						<td><input type="text" name="password" th:value="${userInfoUpdateFormDetail.password}"></input></td>
+					</tr>
+					<tr>
+						<th>役職</th>
+						<td><input type="text" name="position" th:value="${userInfoUpdateFormDetail.position}"></input></td>
+					</tr>
+					<tr>
+						<th>基本給</th>
+						<td><input type="text" name="basicSalary" th:value="${userInfoUpdateFormDetail.basicSalary}"></input></td>
+					</tr>
+				</table>
+			</td></tr>
+			<tr><td>
+				<table border="1">
+					<tr>
+						<th>更新者氏名</th>
+						<td><input type="text" name="updater" th:value="${userInfoUpdateFormDetail.updater}"></input></td>
+					</tr>
+				</table>
+			</td></tr>
+		</table>
+		<input type="submit" name="submit" value="更新"></input>
+	</form>
+
+</body>
+</html>

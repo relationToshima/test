@@ -13,9 +13,16 @@ import com.example.demo.ServiceImpl.InsertToUserInfoServiceImpl;
 import com.example.demo.ServiceImpl.SalaryOutputServiceImpl;
 import com.example.demo.ServiceImpl.UserInfoDeleteServiceImpl;
 import com.example.demo.ServiceImpl.UserInfoRegisterServiceImpl;
+import com.example.demo.ServiceImpl.UserInfoSearchServiceImpl;
+import com.example.demo.ServiceImpl.UserInfoUpdateListServiceImpl;
+import com.example.demo.ServiceImpl.UserInfoUpdateServiceImpl;
+import com.example.demo.constants.message.ConstantsMsg;
 import com.example.demo.domain.OfficeWorker;
 import com.example.demo.formDetail.UserInfoDeleteFormDetail;
 import com.example.demo.formDetail.UserInfoRegisterFormDetail;
+import com.example.demo.formDetail.UserInfoSearchFormDetail;
+import com.example.demo.formDetail.UserInfoUpdateFormDetail;
+import com.example.demo.formDetail.UserInfoUpdateListFormDetail;
 
 @Controller
 public class UserInfoController {
@@ -28,6 +35,12 @@ public class UserInfoController {
 	UserInfoRegisterServiceImpl userInfoRegisterServiceImpl;
 	@Autowired
 	UserInfoDeleteServiceImpl userInfoDeleteServiceImpl;
+	@Autowired
+	UserInfoUpdateListServiceImpl userInfoUpdateListServiceImpl;
+	@Autowired
+	UserInfoUpdateServiceImpl userInfoUpdateServiceImpl;
+	@Autowired
+	UserInfoSearchServiceImpl userInfoSearchServiceImpl;
 
 	/**
 	 * topメソッド
@@ -40,16 +53,104 @@ public class UserInfoController {
 	}
 
 	/**
+	 * UserInfoSearchInitメソッド
+	 * ユーザー情報検索画面の初期表示を行う.
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/UserInfoSearch", method = RequestMethod.GET)
+	public String UserInfoSearchInit(Model model) {
+		UserInfoSearchFormDetail userInfoSearchFormDetail = new UserInfoSearchFormDetail();
+		userInfoSearchFormDetail = userInfoSearchServiceImpl.UserInfoSearchInit();
+		model.addAttribute("userInfoSearchFormDetail", userInfoSearchFormDetail);
+		return "userInfoSearch";
+	}
+
+	/**
+	 * UserInfoSearchOnメソッド
+	 * ユーザー情報検索画面で検索を行う.
+	 * @param userInfoSearchFormDetail
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/UserInfoSearch", params = "searchOn", method = RequestMethod.POST)
+	public String UserInfoSearchOn(
+			@ModelAttribute("userInfoSearchFormDetail") UserInfoSearchFormDetail userInfoSearchFormDetail,
+			Model model) {
+		return "userInfoSearch";
+	}
+
+	/**
+	 * UserInfoUpdateメソッド
+	 * ユーザー情報の更新を行う.
+	 * @param userInfoUpdateFormDetail
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "UserInfoUpdate", params = "submit", method = RequestMethod.POST)
+	public String UserInfoUpdate(
+			@ModelAttribute("userInfoUpdateFormDetail") UserInfoUpdateFormDetail userInfoUpdateFormDetail,
+			Model model) {
+
+		userInfoUpdateFormDetail = userInfoUpdateServiceImpl.UserInfoUpdate(userInfoUpdateFormDetail);
+		model.addAttribute("userInfoUpdateFormDetail", userInfoUpdateFormDetail);
+		return "UserInfoUpdate";
+
+	}
+
+	/**
+	 * UserInfoUpdateListInitメソッド
+	 * ユーザー情報更新一覧画面を表示する.
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/UserInfoUpdateList", method = RequestMethod.GET)
+	public String UserInfoUpdateListInit(Model model) {
+		UserInfoUpdateListFormDetail userInfoUpdateListFormDetail = new UserInfoUpdateListFormDetail();
+		userInfoUpdateListFormDetail
+				.setUserInfoUpdateListFormList(userInfoUpdateListServiceImpl.UserInfoSelectForUpdateList());
+		model.addAttribute("userInfoUpdateListFormDetail", userInfoUpdateListFormDetail);
+		return "UserInfoUpdateList";
+	}
+
+	/**
+	 * UserInfoUpdateSelectメソッド
+	 * 更新対象のユーザーの選択を取得し、更新画面を表示する.
+	 * @param userInfoUpdateFormDetail
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/UserInfoUpdateList", params = "submit", method = RequestMethod.POST)
+	public String UserInfoUpdateSelect(
+			@ModelAttribute("userInfoUpdateListFormDetail") UserInfoUpdateListFormDetail userInfoUpdateListFormDetail,
+			Model model) {
+
+		//ラジオボタンの選択チェック
+		if (!(userInfoUpdateListServiceImpl.UserInfoUpdateListSelectCheck(userInfoUpdateListFormDetail))) {
+			userInfoUpdateListFormDetail.setMessage(ConstantsMsg.MSG_NOT_SELECT);
+			model.addAttribute("userInfoUpdateListFormDetail", userInfoUpdateListFormDetail);
+			return "userInfoUpdateList";
+		}
+
+		//更新画面のデータ取得
+		UserInfoUpdateFormDetail userInfoUpdateFormDetail = userInfoUpdateServiceImpl
+				.UserInfoSelectForUpdate(userInfoUpdateListFormDetail.getRadio());
+		model.addAttribute("userInfoUpdateFormDetail", userInfoUpdateFormDetail);
+		return "userInfoUpdate";
+
+	}
+
+	/**
 	 * UserInfoDeleteメソッド
 	 * ユーザー情報削除画面を表示する.
-	 * @param model
+	 * @para	m model
 	 * @return
 	 */
 	@RequestMapping(value = "/UserInfoDelete", method = RequestMethod.GET)
 	public String UserInfoDeleteInit(Model model) {
 		UserInfoDeleteFormDetail userInfoDeleteFormDetail = new UserInfoDeleteFormDetail();
 		userInfoDeleteFormDetail.setUserInfoDeleteFormList(userInfoDeleteServiceImpl.userInfoSelectForDelete());
-		model.addAttribute("UserInfoDeleteFormDetail", userInfoDeleteFormDetail);
+		model.addAttribute("userInfoDeleteFormDetail", userInfoDeleteFormDetail);
 		return "userInfoDelete";
 	}
 
@@ -62,12 +163,12 @@ public class UserInfoController {
 	 */
 	@RequestMapping(value = "/UserInfoDelete", params = "submit", method = RequestMethod.POST)
 	public String UserInfoDelete(
-			@ModelAttribute("UserInfoDeleteFormDetail") UserInfoDeleteFormDetail userInfoDeleteFormDetail,
+			@ModelAttribute("userInfoDeleteFormDetail") UserInfoDeleteFormDetail userInfoDeleteFormDetail,
 			Model model) {
 
 		//確認ポップアップ表示する
 
-		userInfoDeleteFormDetail = userInfoDeleteServiceImpl.userInfoDelete(userInfoDeleteFormDetail.getCheckBox());
+		userInfoDeleteFormDetail = userInfoDeleteServiceImpl.userInfoDelete(userInfoDeleteFormDetail);
 		model.addAttribute("userInfoDeleteFormDetail", userInfoDeleteFormDetail);
 		return "userInfoDelete";
 

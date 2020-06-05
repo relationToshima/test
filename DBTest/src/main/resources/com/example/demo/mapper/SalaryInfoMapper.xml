@@ -3,19 +3,41 @@
 <mapper namespace="com.example.demo.mapper.SalaryInfoMapper">
 
 	<select id="selectAll" resultType="com.example.demo.domain.SalaryInfo">
-		select *
-		from salaryinfo
+		select
+			*
+		from
+			salaryinfo
+		order by id asc
 	</select>
 
+	<delete id="deleteData">
+		delete
+		from
+			userinfo
+		where
+			id =#{idList}
+	</delete>
+
 	<insert id="insertSalaryInfo">
-		insert into salaryinfo(
-			id,
-			position,
-			basicsalary)
+		insert into
+			salaryinfo(
+				id,
+				position,
+				basicsalary)
 		values (
 			#{salaryInfoToInsert.id},
 			#{salaryInfoToInsert.position},
 			#{salaryInfoToInsert.basicSalary})
 	</insert>
+
+	<update id="updateSalaryInfo">
+		update
+			salaryinfo
+		set
+			position = #{position},
+			basicsalary = #{basicSalary}
+		where
+			id = #{id}
+	</update>
 
 </mapper>
