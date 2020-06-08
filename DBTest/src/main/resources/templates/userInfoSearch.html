@@ -19,7 +19,7 @@
 											<p>検索列</p>
 											<select name="selectColumnsForSearchStr">
 												<option value="">---</option>
-												<option th:each="data : *{selectColumnsForSearch}" th:value="${data}" th:text="${data}"></option>
+												<option th:each="data : *{selectColumnsForSearch}" th:value="${data}" th:text="${data}" th:selected="${data}==*{selectColumnsForSearchStr}"></option>
 											</select>
 											<input type="hidden" name="selectColumnsForSearch" th:value="*{selectColumnsForSearch}"></input>
 										</td>
@@ -31,8 +31,10 @@
 								</table>
 							</td>
 							<td>
-								<p><input type="submit" name="searchOff" value="検索解除"></input></p>
+
+ 								<p><input type="submit" name="searchOff" value="検索解除"></input></p>
 								<p><input type="submit" name="searchOn" value="検索"></input></p>
+
 							</td>
 						</tr>
 					</table>
@@ -43,9 +45,11 @@
 							<td>
 								<table frame="box">
 									<tr>
+									<!--
 										<td>
 											<p>第１キー</p>
 										</td>
+									-->
 									<tr>
 										<td>並べ替え列</td>
 										<td>並べ替え順</td>
@@ -54,20 +58,21 @@
 										<td>
 											<select name="selectColumnsForSort1Str">
 												<option value="">---</option>
-												<option th:each="data : *{selectColumnsForSort1}" th:value="${data}" th:text="${data}"></option>
+												<option th:each="data : *{selectColumnsForSort1}" th:value="${data}" th:text="${data}" th:selected="${data}==*{selectColumnsForSort1Str}"></option>
 											</select>
 											<input type="hidden" name="selectColumnsForSort1" th:value="*{selectColumnsForSort1}"></input>
 										</td>
 										<td>
 											<select name="selectSortOrder1Str">
 												<option value="">---</option>
-												<option th:each="data : *{selectSortOrder1}" th:value="${data}" th:text="${data}"></option>
+												<option th:each="data : *{selectSortOrder1}" th:value="${data}" th:text="${data}" th:selected="${data}==*{selectSortOrder1Str}"></option>
 											</select>
 											<input type="hidden" name="selectSortOrder1" th:value="*{selectSortOrder1}"></input>
 										</td>
 									</tr>
 								</table>
 							</td>
+							<!--
 							<td>
 								<table frame="box">
 									<tr>
@@ -82,68 +87,93 @@
 										<td>
 											<select name="selectColumnsForSort2Str">
 												<option value="">---</option>
-												<option th:each="data : *{selectColumnsForSort2}" th:value="${data}" th:text="${data}"></option>
+												<option th:each="data : *{selectColumnsForSort2}" th:value="${data}" th:text="${data}" th:selected="${data}==*{selectColumnsForSort2Str}"></option>
 											</select>
 											<input type="hidden" name="selectColumnsForSort2" th:value="*{selectColumnsForSort2}"></input>
 										</td>
 										<td>
 											<select name="selectSortOrder2Str">
 												<option value="">---</option>
-												<option th:each="data : *{selectSortOrder2}" th:value="${data}" th:text="${data}"></option>
+												<option th:each="data : *{selectSortOrder2}" th:value="${data}" th:text="${data}" th:selected="${data}==*{selectSortOrder2Str}"></option>
 											</select>
 											<input type="hidden" name="selectSortOrder2" th:value="*{selectSortOrder2}"></input>
 										</td>
 									</tr>
 								</table>
 							</td>
+							-->
 							<td>
+
 								<p><input type="submit" name="sortOff" value="並べ替え解除"></input></p>
 								<p><input type="submit" name="sortOn" value="並べ替え"></input></p>
+
 							</td>
 						</tr>
 					</table>
 				</td>
 			</tr>
+			<!--
+			<tr>
+				<td>
+					<p><input type="submit" name="on" value="実行"></input>
+					<input type="submit" name="on" value="解除"></input></p>
+				</td>
+			</tr>
+			-->
 		</table>
 		<br>
 		<table border="1">
 			<tr>
 				<th>社員番号</th><th>フリガナ</th><th>氏名</th><th>メールアドレス</th><th>認証失敗回数</th><th>最終ログイン日</th><th>登録者</th><th>登録日</th><th>更新者</th><th>更新日</th><th>役職</th>
 			</tr>
-			<tr th:each="data:${userInfoSearchFormDetail.userInfoSearchFormList}">
-				<td>
-					<p th:text="${data.id}"></p>
-				</td>
-				<td>
-					<p th:text="${data.nameReading}"></p>
-				</td>
-				<td>
-					<p th:text="${data.name}"></p>
-				</td>
-				<td>
-					<p th:text="${data.mailAddress}"></p>
-				</td>
-				<td>
-					<p th:text="${data.failureTimes}"></p>
-				</td>
-				<td>
-					<p th:text="${data.lastLoginDate}"></p>
-				</td>
-				<td>
-					<p th:text="${data.registrant}"></p>
-				</td>
-				<td>
-					<p th:text="${data.registrationDate}"></p>
-				</td>
-				<td>
-					<p th:text="${data.updater}"></p>
-				</td>
-				<td>
-					<p th:text="${data.updatedDate}"></p>
-				</td>
-				<td>
-					<p th:text="${data.position}"></p>
-				</td>
+			<tr th:each="data , stat : ${userInfoSearchFormDetail.userInfoSearchFormList}">
+				<div th:if="${data.outputFlg == '1'}">
+					<td>
+						<p th:text="${data.id}"></p>
+					</td>
+					<td>
+						<p th:text="${data.nameReading}"></p>
+					</td>
+					<td>
+						<p th:text="${data.name}"></p>
+					</td>
+					<td>
+						<p th:text="${data.mailAddress}"></p>
+					</td>
+					<td>
+						<p th:text="${data.failureTimes}"></p>
+					</td>
+					<td>
+						<p th:text="${data.lastLoginDate}"></p>
+					</td>
+					<td>
+						<p th:text="${data.registrant}"></p>
+					</td>
+					<td>
+						<p th:text="${data.registrationDateString}"></p>
+					</td>
+					<td>
+						<p th:text="${data.updater}"></p>
+					</td>
+					<td>
+						<p th:text="${data.updatedDateString}"></p>
+					</td>
+					<td>
+						<p th:text="${data.position}"></p>
+					</td>
+				</div>
+				<input type="hidden" th:name="userInfoSearchFormList[__${stat.index}__].id" th:value="${data.id}"></input>
+				<input type="hidden" th:name="userInfoSearchFormList[__${stat.index}__].nmaeReading" th:value="${data.nameReading}"></input>
+				<input type="hidden" th:name="userInfoSearchFormList[__${stat.index}__].name" th:value="${data.name}"></input>
+				<input type="hidden" th:name="userInfoSearchFormList[__${stat.index}__].mailAddress" th:value="${data.mailAddress}"></input>
+				<input type="hidden" th:name="userInfoSearchFormList[__${stat.index}__].failureTimes" th:value="${data.failureTimes}"></input>
+				<input type="hidden" th:name="userInfoSearchFormList[__${stat.index}__].lastLoginDate" th:value="${data.lastLoginDate}"></input>
+				<input type="hidden" th:name="userInfoSearchFormList[__${stat.index}__].registrant" th:value="${data.registrant}"></input>
+				<input type="hidden" th:name="userInfoSearchFormList[__${stat.index}__].registrationDateString" th:value="${data.registrationDateString}"></input>
+				<input type="hidden" th:name="userInfoSearchFormList[__${stat.index}__].updater" th:value="${data.updater}"></input>
+				<input type="hidden" th:name="userInfoSearchFormList[__${stat.index}__].updatedDateString" th:value="${data.updatedDateString}"></input>
+				<input type="hidden" th:name="userInfoSearchFormList[__${stat.index}__].position" th:value="${data.position}"></input>
+				<input type="hidden" th:name="userInfoSearchFormList[__${stat.index}__].outputFlg" th:value="${data.outputFlg}"></input>
 			</tr>
 		</table>
 	</form>

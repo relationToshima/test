@@ -77,6 +77,69 @@ public class UserInfoController {
 	public String UserInfoSearchOn(
 			@ModelAttribute("userInfoSearchFormDetail") UserInfoSearchFormDetail userInfoSearchFormDetail,
 			Model model) {
+
+		userInfoSearchFormDetail = userInfoSearchServiceImpl.SearchOn(userInfoSearchFormDetail);
+
+		model.addAttribute("userInfoSearchFormDetail", userInfoSearchFormDetail);
+
+		return "userInfoSearch";
+	}
+
+	/**
+	 * UserInfoSearchOffメソッド
+	 * ユーザー情報検索画面で検索を解除する.
+	 * @param userInfoSearchFormDetail
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/UserInfoSearch", params = "searchOff", method = RequestMethod.POST)
+	public String UserInfoSearchOff(
+			@ModelAttribute("userInfoSearchFormDetail") UserInfoSearchFormDetail userInfoSearchFormDetail,
+			Model model) {
+
+		userInfoSearchFormDetail = userInfoSearchServiceImpl.SearchOff(userInfoSearchFormDetail);
+
+		model.addAttribute("userInfoSearchFormDetail", userInfoSearchFormDetail);
+
+		return "userInfoSearch";
+	}
+
+	/**
+	 * UserInfoSortOnメソッド
+	 * ユーザー情報検索画面で並べ替えを行う.
+	 * @param userInfoSearchFormDetail
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/UserInfoSearch", params = "sortOn", method = RequestMethod.POST)
+
+	public String UserInfoSortOn(
+			@ModelAttribute("userInfoSearchFormDetail") UserInfoSearchFormDetail userInfoSearchFormDetail,
+			Model model) {
+
+		userInfoSearchFormDetail = userInfoSearchServiceImpl.SortOn(userInfoSearchFormDetail);
+
+		model.addAttribute("userInfoSearchFormDetail", userInfoSearchFormDetail);
+
+		return "userInfoSearch";
+	}
+
+	/**
+	 * UserInfoSortOffメソッド
+	 * ユーザー情報検索画面で並べ替えを解除する.
+	 * @param userInfoSearchFormDetail
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/UserInfoSearch", params = "sortOff", method = RequestMethod.POST)
+	public String UserInfoSortOff(
+			@ModelAttribute("userInfoSearchFormDetail") UserInfoSearchFormDetail userInfoSearchFormDetail,
+			Model model) {
+
+		userInfoSearchFormDetail = userInfoSearchServiceImpl.SortOff(userInfoSearchFormDetail);
+
+		model.addAttribute("userInfoSearchFormDetail", userInfoSearchFormDetail);
+
 		return "userInfoSearch";
 	}
 

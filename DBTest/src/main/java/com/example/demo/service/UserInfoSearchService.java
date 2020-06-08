@@ -10,4 +10,14 @@ public interface UserInfoSearchService {
 
 	List<String> itemReturn(int i);
 
+	UserInfoSearchFormDetail UserInfoSearchSortOn(UserInfoSearchFormDetail userInfoSearchFormDetail);
+
+	UserInfoSearchFormDetail SearchOn(UserInfoSearchFormDetail userInfoSearchFormDetail);
+
+	UserInfoSearchFormDetail SearchOff(UserInfoSearchFormDetail userInfoSearchFormDetail);
+
+	UserInfoSearchFormDetail SortOn(UserInfoSearchFormDetail userInfoSearchFormDetail);
+
+	UserInfoSearchFormDetail SortOff(UserInfoSearchFormDetail userInfoSearchFormDetail);
+
 }

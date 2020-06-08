@@ -112,4 +112,5 @@
 			userinfo.id = salaryinfo.id
 		order by id asc
 	</select>
+
 </mapper>

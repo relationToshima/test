@@ -23,10 +23,21 @@ public class UserInfoSearchForm {
 	String registrant;
 	/** 登録日 **/
 	Date registrationDate;
+	/** 登録日(String) **/
+	String registrationDateString;
 	/** 更新者 **/
 	String updater;
 	/** 更新日 **/
 	Date updatedDate;
+	/** 更新日(String) **/
+	String updatedDateString;
 	/** 役職 **/
 	String position;
+
+	/** 表示フラグ(0:非表示/1:表示) **/
+	String outputFlg;
+
+	UserInfoSearchForm() {
+		outputFlg = "1";
+	}
 }
