@@ -1,5 +1,7 @@
 package com.example.demo.formDetail;
 
+import java.util.List;
+
 import com.example.demo.form.UserInfoRegisterForm;
 
 import lombok.Getter;
@@ -13,6 +15,9 @@ public class UserInfoRegisterFormDetail extends UserInfoRegisterForm {
 	String message;
 
 	/** チェック内容 **/
+
+	/** 役職プルダウン **/
+	List<String> selectPosition;
 
 	/** 氏名　エラーメッセージ **/
 	String nameErrMsg;

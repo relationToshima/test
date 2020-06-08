@@ -2,6 +2,7 @@ package com.example.demo.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -57,6 +58,9 @@ public class StringUtils {
 	 * @return 文字列の前後の空白を取り除いた文字列
 	 */
 	public String trim(String str) {
+		if (str == null) {
+			return null;
+		}
 		int len = str.length();
 		int st = 0;
 		String ans = "";
@@ -93,4 +97,14 @@ public class StringUtils {
 		return date;
 	}
 
+	//なぜかプルダウン用のListに”[”と”]”が含まれるので一時対処用
+	public List<String> itemColumnsShaping(List<String> itemColumns) {
+
+		int maxElements = itemColumns.size() - 1;
+
+		itemColumns.set(0, itemColumns.get(0).replace("[", ""));
+		itemColumns.set(maxElements, itemColumns.get(maxElements).replace("]", ""));
+
+		return itemColumns;
+	}
 }

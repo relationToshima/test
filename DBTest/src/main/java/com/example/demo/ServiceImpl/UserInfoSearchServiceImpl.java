@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.constants.ConstantsData;
+import com.example.demo.constants.message.ConstantsMsg;
 import com.example.demo.form.UserInfoSearchForm;
 import com.example.demo.formDetail.UserInfoSearchFormDetail;
 import com.example.demo.mapper.UserInfoMapper;
@@ -21,6 +22,8 @@ public class UserInfoSearchServiceImpl implements UserInfoSearchService {
 	@Autowired
 	StringUtils stringUtils;
 	@Autowired
+	ConstantsMsg constantsMsg;
+	@Autowired
 	ConstantsData constantsData;
 
 	@Override
@@ -32,8 +35,12 @@ public class UserInfoSearchServiceImpl implements UserInfoSearchService {
 
 		//Date型をString型に変換
 		for (UserInfoSearchForm data : userInfoSearchFormDetail.getUserInfoSearchFormList()) {
-			data.setRegistrationDateString(String.valueOf(data.getRegistrationDate()));
-			data.setUpdatedDateString(String.valueOf(data.getUpdatedDate()));
+			if (data.getRegistrationDate() != null) {
+				data.setRegistrationDateString(data.getRegistrationDate().toString());
+			}
+			if (data.getUpdatedDate() != null) {
+				data.setUpdatedDateString(data.getUpdatedDate().toString());
+			}
 		}
 
 		/*プルダウン項目を設定*/
@@ -54,50 +61,30 @@ public class UserInfoSearchServiceImpl implements UserInfoSearchService {
 	}
 
 	@Override
-	public UserInfoSearchFormDetail UserInfoSearchSortOn(UserInfoSearchFormDetail userInfoSearchFormDetail) {
-
-		//入力状態の確認
-		boolean searchFlg = false;
-		boolean sort1Flg = false;
-		boolean sort2Flg = false;
-		if (!(stringUtils.isEmpty(userInfoSearchFormDetail.getSelectColumnsForSearchStr()))
-				&& !(stringUtils.isEmpty(userInfoSearchFormDetail.getSearchKey()))) {
-			searchFlg = true;
-		}
-		if (!(stringUtils.isEmpty(userInfoSearchFormDetail.getSelectColumnsForSort1Str()))
-				&& !(stringUtils.isEmpty(userInfoSearchFormDetail.getSelectSortOrder1Str()))) {
-			sort1Flg = true;
-		}
-		if (!(stringUtils.isEmpty(userInfoSearchFormDetail.getSelectColumnsForSort2Str()))
-				&& !(stringUtils.isEmpty(userInfoSearchFormDetail.getSelectSortOrder2Str()))) {
-			sort1Flg = true;
-		}
-
-		if (searchFlg == true && sort1Flg == false && sort2Flg == false) {
-			//検索のみ実行
-
-		} else if (searchFlg = false && (sort1Flg == true || sort2Flg == true)) {
-			//並べ替えのみ実行
-
-		} else if (searchFlg = true && (sort1Flg == true || sort2Flg == true)) {
-			//検索と並べ替えともに実行
-
-		} else {
-			//未選択
-
-		}
-
-		return userInfoSearchFormDetail;
-
-	}
-
-	@Override
 	public UserInfoSearchFormDetail SearchOn(UserInfoSearchFormDetail userInfoSearchFormDetail) {
 
 		//必要データの抽出
 		List<UserInfoSearchForm> dataList = userInfoSearchFormDetail.getUserInfoSearchFormList();
 		String columns = userInfoSearchFormDetail.getSelectColumnsForSearchStr();
 		String key = userInfoSearchFormDetail.getSearchKey();
+
+		//未設定
+		if (stringUtils.isEmpty(columns) || stringUtils.isEmpty(key)) {
+			userInfoSearchFormDetail.setMessage(constantsMsg.MSG_NOT_SELECT);
+
+			//プルダウン対処用
+			userInfoSearchFormDetail
+					.setSelectColumnsForSearch(
+							stringUtils.itemColumnsShaping(userInfoSearchFormDetail.getSelectColumnsForSearch()));
+			userInfoSearchFormDetail
+					.setSelectColumnsForSort1(
+							stringUtils.itemColumnsShaping(userInfoSearchFormDetail.getSelectColumnsForSort1()));
+			userInfoSearchFormDetail
+					.setSelectSortOrder1(
+							stringUtils.itemColumnsShaping(userInfoSearchFormDetail.getSelectSortOrder1()));
+
+			return userInfoSearchFormDetail;
+		}
 
 		int count = dataList.size();
 
@@ -171,11 +158,13 @@ public class UserInfoSearchServiceImpl implements UserInfoSearchService {
 
 		//プルダウン対処用
 		userInfoSearchFormDetail
-				.setSelectColumnsForSearch(itemColumnsShaping(userInfoSearchFormDetail.getSelectColumnsForSearch()));
+				.setSelectColumnsForSearch(
+						stringUtils.itemColumnsShaping(userInfoSearchFormDetail.getSelectColumnsForSearch()));
 		userInfoSearchFormDetail
-				.setSelectColumnsForSort1(itemColumnsShaping(userInfoSearchFormDetail.getSelectColumnsForSort1()));
+				.setSelectColumnsForSort1(
+						stringUtils.itemColumnsShaping(userInfoSearchFormDetail.getSelectColumnsForSort1()));
 		userInfoSearchFormDetail
-				.setSelectSortOrder1(itemColumnsShaping(userInfoSearchFormDetail.getSelectSortOrder1()));
+				.setSelectSortOrder1(stringUtils.itemColumnsShaping(userInfoSearchFormDetail.getSelectSortOrder1()));
 
 		userInfoSearchFormDetail.setUserInfoSearchFormList(dataList);
 
@@ -201,11 +190,13 @@ public class UserInfoSearchServiceImpl implements UserInfoSearchService {
 
 		//プルダウン対処用
 		userInfoSearchFormDetail
-				.setSelectColumnsForSearch(itemColumnsShaping(userInfoSearchFormDetail.getSelectColumnsForSearch()));
+				.setSelectColumnsForSearch(
+						stringUtils.itemColumnsShaping(userInfoSearchFormDetail.getSelectColumnsForSearch()));
 		userInfoSearchFormDetail
-				.setSelectColumnsForSort1(itemColumnsShaping(userInfoSearchFormDetail.getSelectColumnsForSort1()));
+				.setSelectColumnsForSort1(
+						stringUtils.itemColumnsShaping(userInfoSearchFormDetail.getSelectColumnsForSort1()));
 		userInfoSearchFormDetail
-				.setSelectSortOrder1(itemColumnsShaping(userInfoSearchFormDetail.getSelectSortOrder1()));
+				.setSelectSortOrder1(stringUtils.itemColumnsShaping(userInfoSearchFormDetail.getSelectSortOrder1()));
 
 		return userInfoSearchFormDetail;
 	}
@@ -369,11 +360,13 @@ public class UserInfoSearchServiceImpl implements UserInfoSearchService {
 
 		//プルダウン対処用
 		userInfoSearchFormDetail
-				.setSelectColumnsForSearch(itemColumnsShaping(userInfoSearchFormDetail.getSelectColumnsForSearch()));
+				.setSelectColumnsForSearch(
+						stringUtils.itemColumnsShaping(userInfoSearchFormDetail.getSelectColumnsForSearch()));
 		userInfoSearchFormDetail
-				.setSelectColumnsForSort1(itemColumnsShaping(userInfoSearchFormDetail.getSelectColumnsForSort1()));
+				.setSelectColumnsForSort1(
+						stringUtils.itemColumnsShaping(userInfoSearchFormDetail.getSelectColumnsForSort1()));
 		userInfoSearchFormDetail
-				.setSelectSortOrder1(itemColumnsShaping(userInfoSearchFormDetail.getSelectSortOrder1()));
+				.setSelectSortOrder1(stringUtils.itemColumnsShaping(userInfoSearchFormDetail.getSelectSortOrder1()));
 
 		return userInfoSearchFormDetail;
 	}
@@ -405,11 +398,13 @@ public class UserInfoSearchServiceImpl implements UserInfoSearchService {
 
 		//プルダウン対処用
 		userInfoSearchFormDetail
-				.setSelectColumnsForSearch(itemColumnsShaping(userInfoSearchFormDetail.getSelectColumnsForSearch()));
+				.setSelectColumnsForSearch(
+						stringUtils.itemColumnsShaping(userInfoSearchFormDetail.getSelectColumnsForSearch()));
 		userInfoSearchFormDetail
-				.setSelectColumnsForSort1(itemColumnsShaping(userInfoSearchFormDetail.getSelectColumnsForSort1()));
+				.setSelectColumnsForSort1(
+						stringUtils.itemColumnsShaping(userInfoSearchFormDetail.getSelectColumnsForSort1()));
 		userInfoSearchFormDetail
-				.setSelectSortOrder1(itemColumnsShaping(userInfoSearchFormDetail.getSelectSortOrder1()));
+				.setSelectSortOrder1(stringUtils.itemColumnsShaping(userInfoSearchFormDetail.getSelectSortOrder1()));
 
 		return userInfoSearchFormDetail;
 	}
@@ -435,17 +430,6 @@ public class UserInfoSearchServiceImpl implements UserInfoSearchService {
 		}
 
 		return tmpList;
-	}
-
-	//なぜかプルダウン用のListに”[”と”]”が含まれるので一時対処用
-	public List<String> itemColumnsShaping(List<String> itemColumns) {
-
-		int maxElements = itemColumns.size() - 1;
-
-		itemColumns.set(0, itemColumns.get(0).replace("[", ""));
-		itemColumns.set(maxElements, itemColumns.get(maxElements).replace("]", ""));
-
-		return itemColumns;
 	}
 
 }

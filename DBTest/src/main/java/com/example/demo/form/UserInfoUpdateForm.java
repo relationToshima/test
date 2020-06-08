@@ -18,8 +18,8 @@ public class UserInfoUpdateForm {
 	String password;
 	/** 役職 **/
 	String position;
-	/** 基本給 **/
-	int basicSalary;
+	/** 基本給（String型） **/
+	String basicSalaryStr;
 	/** 更新者 **/
 	String updater;
 	/** 更新日 **/

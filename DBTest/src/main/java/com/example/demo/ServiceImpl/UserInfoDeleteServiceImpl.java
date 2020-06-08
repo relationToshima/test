@@ -24,15 +24,15 @@ public class UserInfoDeleteServiceImpl implements UserInfoDeleteService {
 	StringUtils stringUtils;
 
 	@Override
-	public List<UserInfoDeleteForm> userInfoSelectForDelete() {
+	public List<UserInfoDeleteForm> UserInfoDeleteInit() {
 
-		List<UserInfoDeleteForm> userInfoList = userInfoMapper.selectIdNameForDalete();
+		List<UserInfoDeleteForm> userInfoList = userInfoMapper.selectIdNameForDelete();
 
 		return userInfoList;
 	}
 
 	@Override
-	public UserInfoDeleteFormDetail userInfoDelete(UserInfoDeleteFormDetail userInfoDeleteFormDetail) {
+	public UserInfoDeleteFormDetail UserInfoDelete(UserInfoDeleteFormDetail userInfoDeleteFormDetail) {
 
 		//メッセージの初期化
 		userInfoDeleteFormDetail.setMessage("");
@@ -43,27 +43,21 @@ public class UserInfoDeleteServiceImpl implements UserInfoDeleteService {
 			return userInfoDeleteFormDetail;
 		}
 
-		//選択したチェックボックスの値をDELETE文に使用できるように整形
-		boolean result = true;
-		String idList = "";
-		for (String str : userInfoDeleteFormDetail.getCheckBox()) {
-			idList = idList + " " + str;
-		}
-		idList = stringUtils.trim(idList);
-		idList = idList.replaceAll(" ", ",");
-
 		try {
 			//DELETE
-			userInfoMapper.deleteData(idList);
-			salaryInfoMapper.deleteData(idList);
+			for (String id : userInfoDeleteFormDetail.getCheckBox()) {
+				userInfoMapper.deleteData(id);
+				salaryInfoMapper.deleteData(id);
+			}
+
 			userInfoDeleteFormDetail.setMessage(ConstantsMsg.MSG_DELETE_OK);
 
 			//DELETE後のリストを取得
-			userInfoDeleteFormDetail.setUserInfoDeleteFormList(userInfoMapper.selectIdNameForDalete());
+			userInfoDeleteFormDetail.setUserInfoDeleteFormList(userInfoMapper.selectIdNameForDelete());
 
 		} catch (Exception e) {
 			userInfoDeleteFormDetail.setMessage(ConstantsMsg.MSG_DELETE_NG);
-			userInfoDeleteFormDetail.setUserInfoDeleteFormList(userInfoMapper.selectIdNameForDalete());
+			userInfoDeleteFormDetail.setUserInfoDeleteFormList(userInfoMapper.selectIdNameForDelete());
 		}
 
 		return userInfoDeleteFormDetail;

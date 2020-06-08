@@ -1,5 +1,8 @@
 package com.example.demo.ServiceImpl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +22,17 @@ public class UserInfoRegisterServiceImpl implements UserInfoRegisterService {
 	InsertToUserInfoServiceImpl insertToUserInfoServiceImpl;
 
 	@Override
+	public UserInfoRegisterFormDetail UserInfoRegisterInit() {
+		UserInfoRegisterFormDetail userInfoRegisterFormDetail = new UserInfoRegisterFormDetail();
+		userInfoRegisterFormDetail.setSelectPosition(itemReturn());
+		return userInfoRegisterFormDetail;
+
+	}
+
+	@Override
 	public UserInfoRegisterFormDetail UserInfoRegister(UserInfoRegisterFormDetail form) {
 
-		/*エラーフラグ　エラーメッセージ　メッセージ　初期化*/
+		/*エラーフラグ　エラーメッセージ　メッセージ　プルダウン　初期化*/
 		form = FormReset(form);
 
 		/*入力データのトリム*/
@@ -51,14 +62,14 @@ public class UserInfoRegisterServiceImpl implements UserInfoRegisterService {
 			form.setBasicSalaryErrMsg("基本給" + ConstantsMsg.ERR_MSG_NOT_NUM);
 		}
 
-		//いずれかの項目でエラーが合った場合、返却する
+		//いずれかの項目でエラーがあった場合、返却する
 		if (form.isNameErrFlg() == true
 				|| form.isPositionErrFlg() == true
 				|| form.isBasicSalaryErrFlg() == true) {
 			return form;
 		}
 
-		//データのDB登録
+		//データのDB登録準備
 		UserInfo userInfoToInsert = new UserInfo();
 		userInfoToInsert.setName(form.getInputName());
 
@@ -66,7 +77,7 @@ public class UserInfoRegisterServiceImpl implements UserInfoRegisterService {
 		salaryInfoToInsert.setPosition(form.getInputPosition());
 		salaryInfoToInsert.setBasicSalary(Integer.parseInt(form.getInputBasicSalary()));
 
-		//登録結果の設定
+		//登録
 		boolean result;
 		result = insertToUserInfoServiceImpl.UserInfoInsert(userInfoToInsert, salaryInfoToInsert);
 
@@ -80,6 +91,20 @@ public class UserInfoRegisterServiceImpl implements UserInfoRegisterService {
 		}
 
 		return form;
+	}
+
+	/**
+	 * itemReturnメソッド
+	 * プルダウンの値を返却する.
+	 * @return
+	 */
+	public List<String> itemReturn() {
+		List<String> tmpList = new ArrayList<String>();
+
+		tmpList.add("Administrater");
+		tmpList.add("Member");
+
+		return tmpList;
 	}
 
 	/**
@@ -99,6 +124,7 @@ public class UserInfoRegisterServiceImpl implements UserInfoRegisterService {
 		form.setBasicSalaryErrFlg(false);
 		form.setBasicSalaryErrMsg("");
 		form.setMessage("");
+		form.setSelectPosition(stringUtils.itemColumnsShaping(form.getSelectPosition()));
 		return form;
 	}
 

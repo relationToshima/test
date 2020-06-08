@@ -5,49 +5,105 @@
 <title>ユーザー情報更新</title>
 </head>
 <body>
-	<a href="/top"><button type="button">戻る</button></a>
+	<a href="/UserInfoUpdateList"><button type="button">戻る</button></a>
 	<p th:text="${userInfoUpdateFormDetail.message}"></p>
 
 	<form action="/UserInfoUpdate" th:object="${userInfoUpdateFormDetail}" method="POST">
+		<input type="hidden" th:name="id" th:value="${userInfoUpdateFormDetail.id}">
 		<table>
-			<tr><td>
-				<table border="1">
-					<input type="hidden" th:name="id" th:value="${userInfoUpdateFormDetail.id}">
-					<tr>
-						<th>フリガナ</th>
-						<td><input type="text" name="nameReading" th:value="${userInfoUpdateFormDetail.nameReading}"></input></td>
-					</tr>
-					<tr>
-						<th>氏名</th>
-						<td><input type="text" name="name" th:value="${userInfoUpdateFormDetail.name}"></input></td>
-					</tr>
-					<tr>
-						<th>メールアドレス</th>
-						<td><input type="text" name="mailAddress" th:value="${userInfoUpdateFormDetail.mailAddress}"></input></td>
-					</tr>
-					<tr>
-						<th>パスワード</th>
-						<td><input type="text" name="password" th:value="${userInfoUpdateFormDetail.password}"></input></td>
-					</tr>
-					<tr>
-						<th>役職</th>
-						<td><input type="text" name="position" th:value="${userInfoUpdateFormDetail.position}"></input></td>
-					</tr>
-					<tr>
-						<th>基本給</th>
-						<td><input type="text" name="basicSalary" th:value="${userInfoUpdateFormDetail.basicSalary}"></input></td>
-					</tr>
-				</table>
-			</td></tr>
-			<tr><td>
-				<table border="1">
-					<tr>
-						<th>更新者氏名</th>
-						<td><input type="text" name="updater" th:value="${userInfoUpdateFormDetail.updater}"></input></td>
-					</tr>
-				</table>
-			</td></tr>
+			<tr>
+				<td>
+					<table border="1" style="width: 500px;">
+						<tr>
+							<th style="width: 30%;">フリガナ</th>
+							<td style="width: 70%;"><input type="text" name="nameReading" th:value="*{nameReading}" style="width: 100%;"></input></td>
+						</tr>
+					</table>
+				</td>
+				<td>
+				<!-- フリガナ -->
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<table border="1" style="width: 500px;">
+						<tr>
+							<th style="width: 30%;">氏名</th>
+							<td style="width: 70%;"><input type="text" name="name" th:value="*{name}" style="width: 100%;"></input></td>
+						</tr>
+						<tr>
+					</table>
+				</td>
+				<td>
+					<p th:text="*{nameErrMsg}"></p>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<table border="1" style="width: 500px;">
+						<tr>
+							<th style="width: 30%;">メールアドレス</th>
+							<td style="width: 70%;"><input type="text" name="mailAddress" th:value="*{mailAddress}" style="width: 100%;"></input></td>
+						</tr>
+					</table>
+				</td>
+				<td>
+					<!-- メールアドレス -->
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<table border="1" style="width: 500px;">
+						<tr>
+							<th style="width: 30%;">パスワード</th>
+							<td style="width: 70%;"><input type="text" name="password" th:value="*{password}" style="width: 100%;"></input></td>
+						</tr>
+					</table>
+				</td>
+				<td>
+					<!-- パスワード -->
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<table border="1" style="width: 500px;">
+						<tr>
+							<th style="width: 30%;">役職</th>
+							<td style="width: 70%;">
+								<select name="position" style="width: 100%;">
+									<option value="">---</option>
+									<option th:each="data : *{selectPosition}" th:value="${data}" th:text="${data}" th:selected="${data}==*{position}"></option>
+								</select>
+								<input type="hidden" name="selectPosition" th:value="*{selectPosition}"></input>
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td>
+					<p th:text="*{positionErrMsg}"></p>
+				</td>
+			</tr>
+				<td>
+					<table border="1" style="width: 500px;">
+						<tr>
+							<th style="width: 30%;">基本給</th>
+							<td style="width: 70%;"><input type="text" name="basicSalaryStr" th:value="*{basicSalaryStr}" style="width: 100%;"></input></td>
+						</tr>
+					</table>
+				</td>
+				<td>
+					<p th:text="*{basicSalaryErrMsg}"></p>
+				</td>
+			</tr>
 		</table>
+		<br>
+		<table border="1" style="width: 500px;">
+			<tr>
+				<th style="width: 30%;">更新者氏名</th>
+				<td style="width: 70%;"><input type="text" name="updater" th:value="*{updater}" style="width: 100%;"></input></td>
+			</tr>
+		</table>
+		<br>
 		<input type="submit" name="submit" value="更新"></input>
 	</form>
 

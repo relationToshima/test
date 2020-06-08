@@ -14,7 +14,7 @@ import com.example.demo.formDetail.UserInfoUpdateFormDetail;
 public interface UserInfoMapper {
 	List<UserInfo> selectAll();
 
-	List<UserInfoDeleteForm> selectIdNameForDalete();
+	List<UserInfoDeleteForm> selectIdNameForDelete();
 
 	List<UserInfoUpdateListForm> selectIdNameForUpdateList();
 
@@ -22,7 +22,7 @@ public interface UserInfoMapper {
 
 	void updateUserInfo(UserInfoUpdateFormDetail userInfoUpdateFormDetail);
 
-	void deleteData(String idList);
+	void deleteData(String id);
 
 	String selectMaxId();
 

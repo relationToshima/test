@@ -1,5 +1,7 @@
 package com.example.demo.ServiceImpl;
 
+import java.sql.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +36,8 @@ public class InsertToUserInfoServiceImpl implements InsertToUserInfoService {
 			int id = Integer.parseInt(strId) + 1;
 			userInfoToInsert.setId(String.valueOf(String.format("%04d", id)));
 			salaryInfoToInsert.setId(userInfoToInsert.getId());
+			//登録日の設定
+			userInfoToInsert.setRegistrationDate(Date.valueOf(stringUtils.getNowDate()));
 
 			//userInfoのインサート
 			userInfoMapper.insertUserInfo(userInfoToInsert);

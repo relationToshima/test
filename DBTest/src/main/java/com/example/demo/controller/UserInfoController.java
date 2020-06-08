@@ -177,14 +177,14 @@ public class UserInfoController {
 	}
 
 	/**
-	 * UserInfoUpdateSelectメソッド
+	 * UserInfoUpdateInitメソッド
 	 * 更新対象のユーザーの選択を取得し、更新画面を表示する.
 	 * @param userInfoUpdateFormDetail
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping(value = "/UserInfoUpdateList", params = "submit", method = RequestMethod.POST)
-	public String UserInfoUpdateSelect(
+	public String UserInfoUpdateInit(
 			@ModelAttribute("userInfoUpdateListFormDetail") UserInfoUpdateListFormDetail userInfoUpdateListFormDetail,
 			Model model) {
 
@@ -197,7 +197,7 @@ public class UserInfoController {
 
 		//更新画面のデータ取得
 		UserInfoUpdateFormDetail userInfoUpdateFormDetail = userInfoUpdateServiceImpl
-				.UserInfoSelectForUpdate(userInfoUpdateListFormDetail.getRadio());
+				.UserInfoUpdateInit(userInfoUpdateListFormDetail.getRadio());
 		model.addAttribute("userInfoUpdateFormDetail", userInfoUpdateFormDetail);
 		return "userInfoUpdate";
 
@@ -212,7 +212,7 @@ public class UserInfoController {
 	@RequestMapping(value = "/UserInfoDelete", method = RequestMethod.GET)
 	public String UserInfoDeleteInit(Model model) {
 		UserInfoDeleteFormDetail userInfoDeleteFormDetail = new UserInfoDeleteFormDetail();
-		userInfoDeleteFormDetail.setUserInfoDeleteFormList(userInfoDeleteServiceImpl.userInfoSelectForDelete());
+		userInfoDeleteFormDetail.setUserInfoDeleteFormList(userInfoDeleteServiceImpl.UserInfoDeleteInit());
 		model.addAttribute("userInfoDeleteFormDetail", userInfoDeleteFormDetail);
 		return "userInfoDelete";
 	}
@@ -231,7 +231,7 @@ public class UserInfoController {
 
 		//確認ポップアップ表示する
 
-		userInfoDeleteFormDetail = userInfoDeleteServiceImpl.userInfoDelete(userInfoDeleteFormDetail);
+		userInfoDeleteFormDetail = userInfoDeleteServiceImpl.UserInfoDelete(userInfoDeleteFormDetail);
 		model.addAttribute("userInfoDeleteFormDetail", userInfoDeleteFormDetail);
 		return "userInfoDelete";
 
@@ -254,14 +254,14 @@ public class UserInfoController {
 	}
 
 	/**
-	 * UserInfoRegisterメソッド
+	 * UserInfoRegisterInitメソッド
 	 * ユーザー情報登録画面の初期表示を行う.
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping(value = "/UserInfoRegister", method = RequestMethod.GET)
 	public String UserInfoRegisterInit(Model model) {
-		UserInfoRegisterFormDetail userInfoRegisterFormDetail = new UserInfoRegisterFormDetail();
+		UserInfoRegisterFormDetail userInfoRegisterFormDetail = userInfoRegisterServiceImpl.UserInfoRegisterInit();
 		model.addAttribute("userInfoRegisterFormDetail", userInfoRegisterFormDetail);
 		return "userInfoRegister";
 	}
@@ -280,18 +280,6 @@ public class UserInfoController {
 		userInfoRegisterFormDetail = userInfoRegisterServiceImpl.UserInfoRegister(userInfoRegisterFormDetail);
 		model.addAttribute("userInfoRegisterFormDetail", userInfoRegisterFormDetail);
 		return "userInfoRegister";
-
-	}
-
-	/**
-	 * backメソッド
-	 * 給与情報一覧画面に戻る.
-	 * @return
-	 */
-	@RequestMapping(value = "/UserInfoRegister", params = "back", method = RequestMethod.GET)
-	public String back() {
-		System.out.println("aaa");
-		return "salaryInfoList";
 
 	}
 

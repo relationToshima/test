@@ -11,17 +11,33 @@
 	<form action="/UserInfoRegister" th:object="${userInfoRegisterFormDetail}" method="POST">
 		<table>
 			<tr><th align="left">氏名</th></tr>
-			<tr><td><input type="text" name="inputName" th:value="${userInfoRegisterFormDetail.inputName}"></input></td>
-				<td><p th:text="${userInfoRegisterFormDetail.nameErrMsg}"></p></td></tr>
+			<tr>
+				<td><input type="text" name="inputName" th:value="${userInfoRegisterFormDetail.inputName}"></input></td>
+				<td><p th:text="${userInfoRegisterFormDetail.nameErrMsg}"></p></td>
+			</tr>
 
 			<tr><th align="left">役職</th></tr>
-			<tr><td><input type="text" name="inputPosition" th:value="${userInfoRegisterFormDetail.inputPosition}"></input></td>
-				<td><p th:text="${userInfoRegisterFormDetail.positionErrMsg}"></p></td></tr>
+			<tr>
+			<!--
+				<td><input type="text" name="inputPosition" th:value="${userInfoRegisterFormDetail.inputPosition}"></input></td>
+			-->
+				<td>
+					<select name="inputPosition">
+						<option value="">---</option>
+						<option th:each="data : *{selectPosition}" th:value="${data}" th:text="${data}" th:selected="${data}==*{inputPosition}"></option>
+					</select>
+					<input type="hidden" name="selectPosition" th:value="*{selectPosition}"></input>
+				</td>
+				<td><p th:text="${userInfoRegisterFormDetail.positionErrMsg}"></p></td>
+			</tr>
 
 			<tr><th align="left">基本給</th></tr>
-			<tr><td><input type="text" name="inputBasicSalary" th:value="${userInfoRegisterFormDetail.inputBasicSalary}"></input></td>
-				<td><p th:text="${userInfoRegisterFormDetail.basicSalaryErrMsg}"></p></td></tr>
+			<tr>
+				<td><input type="text" name="inputBasicSalary" th:value="${userInfoRegisterFormDetail.inputBasicSalary}"></input></td>
+				<td><p th:text="${userInfoRegisterFormDetail.basicSalaryErrMsg}"></p></td>
+			</tr>
 		</table>
+		<br>
 	    <input type="submit" value="登録" name="submit"></input/>
 	</form>
 </body>

@@ -64,7 +64,7 @@
 		from
 			userinfo
 		where
-			id =#{idList}
+			id = #{idList}
 	</delete>
 
 	<select id="selectMaxId" resultType="String">
@@ -82,14 +82,16 @@
 				name,
 				mailaddress,
 				password,
-				registrant)
+				registrant,
+				registrationdate)
 		values (
 			#{userInfoToInsert.id},
 			#{userInfoToInsert.nameReading},
 			#{userInfoToInsert.name},
 			#{userInfoToInsert.mailAddress},
 			#{userInfoToInsert.password},
-			#{userInfoToInsert.registrant})
+			#{userInfoToInsert.registrant},
+			#{userInfoToInsert.registrationDate})
 	</insert>
 
 	<select id="selectUserInfoForSearch" resultType="com.example.demo.form.UserInfoSearchForm">

@@ -1,5 +1,7 @@
 package com.example.demo.domain;
 
+import java.sql.Date;
+
 import org.springframework.stereotype.Component;
 
 import lombok.Data;
@@ -27,9 +29,9 @@ public class UserInfo {
 	/** 登録者 */
 	private String registrant;
 	/** 登録日 */
-	private String registrationDate;
+	private Date registrationDate;
 	/** 更新者 */
 	private String updater;
 	/** 更新日 */
-	private String updatedDate;
+	private Date updatedDate;
 }

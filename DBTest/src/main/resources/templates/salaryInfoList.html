@@ -5,6 +5,7 @@
 <title>給与情報一覧</title>
 </head>
 <body>
+	<a href="/top"><button type="button">戻る</button></a>
 	<p th:text="${result}"></p>
 	<table border="1">
 		<tr>
@@ -20,6 +21,5 @@
 			<td th:text="${data.basicSalaryAddPositionAllowance}"></td>
 		</tr>
 	</table>
-	<a href="/UserInfoRegister"><button type="button">新規ユーザー登録</button></a>
 </body>
 </html>

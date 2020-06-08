@@ -1,5 +1,8 @@
 package com.example.demo.constants.message;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class ConstantsMsg {
 
 	//必須チェック　エラーメッセージ

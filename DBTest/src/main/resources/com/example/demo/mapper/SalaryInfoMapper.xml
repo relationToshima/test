@@ -13,9 +13,9 @@
 	<delete id="deleteData">
 		delete
 		from
-			userinfo
+			salaryinfo
 		where
-			id =#{idList}
+			id = #{id}
 	</delete>
 
 	<insert id="insertSalaryInfo">

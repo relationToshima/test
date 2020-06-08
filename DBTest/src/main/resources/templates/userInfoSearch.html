@@ -6,6 +6,7 @@
 </head>
 <body>
 	<a href="/top"><button type="button">戻る</button></a>
+	<p th:text="${userInfoSearchFormDetail.message}"></p>
 	<form action="/UserInfoSearch" th:object="${userInfoSearchFormDetail}" method="POST">
 		<table>
 			<tr>
@@ -163,7 +164,7 @@
 					</td>
 				</div>
 				<input type="hidden" th:name="userInfoSearchFormList[__${stat.index}__].id" th:value="${data.id}"></input>
-				<input type="hidden" th:name="userInfoSearchFormList[__${stat.index}__].nmaeReading" th:value="${data.nameReading}"></input>
+				<input type="hidden" th:name="userInfoSearchFormList[__${stat.index}__].nameReading" th:value="${data.nameReading}"></input>
 				<input type="hidden" th:name="userInfoSearchFormList[__${stat.index}__].name" th:value="${data.name}"></input>
 				<input type="hidden" th:name="userInfoSearchFormList[__${stat.index}__].mailAddress" th:value="${data.mailAddress}"></input>
 				<input type="hidden" th:name="userInfoSearchFormList[__${stat.index}__].failureTimes" th:value="${data.failureTimes}"></input>

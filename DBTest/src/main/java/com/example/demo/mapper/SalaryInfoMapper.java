@@ -10,7 +10,7 @@ import com.example.demo.formDetail.UserInfoUpdateFormDetail;
 public interface SalaryInfoMapper {
 	List<SalaryInfo> selectAll();
 
-	void deleteData(String idList);
+	void deleteData(String id);
 
 	boolean insertSalaryInfo(@Param("salaryInfoToInsert") SalaryInfo salaryInfoToInsert);
 
