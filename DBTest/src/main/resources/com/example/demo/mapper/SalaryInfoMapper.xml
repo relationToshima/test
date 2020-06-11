@@ -25,9 +25,9 @@
 				position,
 				basicsalary)
 		values (
-			#{salaryInfoToInsert.id},
-			#{salaryInfoToInsert.position},
-			#{salaryInfoToInsert.basicSalary})
+			#{id},
+			#{position},
+			#{basicSalary})
 	</insert>
 
 	<update id="updateSalaryInfo">

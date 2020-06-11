@@ -84,19 +84,11 @@ public class UserInfoUpdateServiceImpl implements UserInfoUpdateService {
 
 		//DB比較したい
 
-		try {
+		//更新
+		userInfoMapper.updateUserInfo(userInfoUpdateFormDetail);
+		salaryInfoMapper.updateSalaryInfo(userInfoUpdateFormDetail);
 
-			//更新
-			userInfoMapper.updateUserInfo(userInfoUpdateFormDetail);
-			salaryInfoMapper.updateSalaryInfo(userInfoUpdateFormDetail);
-
-			userInfoUpdateFormDetail.setMessage(ConstantsMsg.MSG_UPDATE_OK);
-
-		} catch (Exception e) {
-
-			userInfoUpdateFormDetail.setMessage(ConstantsMsg.MSG_UPDATE_NG);
-
-		}
+		userInfoUpdateFormDetail.setMessage(ConstantsMsg.MSG_UPDATE_OK);
 
 		return userInfoUpdateFormDetail;
 	}

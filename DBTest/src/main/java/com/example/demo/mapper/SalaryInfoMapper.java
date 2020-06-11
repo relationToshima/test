@@ -2,8 +2,6 @@ package com.example.demo.mapper;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
-
 import com.example.demo.domain.SalaryInfo;
 import com.example.demo.formDetail.UserInfoUpdateFormDetail;
 
@@ -12,7 +10,7 @@ public interface SalaryInfoMapper {
 
 	void deleteData(String id);
 
-	boolean insertSalaryInfo(@Param("salaryInfoToInsert") SalaryInfo salaryInfoToInsert);
+	void insertSalaryInfo(SalaryInfo salaryInfoToInsert);
 
-	boolean updateSalaryInfo(UserInfoUpdateFormDetail userInfoUpdateFormDetail);
+	void updateSalaryInfo(UserInfoUpdateFormDetail userInfoUpdateFormDetail);
 }

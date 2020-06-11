@@ -43,22 +43,16 @@ public class UserInfoDeleteServiceImpl implements UserInfoDeleteService {
 			return userInfoDeleteFormDetail;
 		}
 
-		try {
-			//DELETE
-			for (String id : userInfoDeleteFormDetail.getCheckBox()) {
-				userInfoMapper.deleteData(id);
-				salaryInfoMapper.deleteData(id);
-			}
+		//DELETE
+		for (String id : userInfoDeleteFormDetail.getCheckBox()) {
+			userInfoMapper.deleteData(id);
+			salaryInfoMapper.deleteData(id);
 
-			userInfoDeleteFormDetail.setMessage(ConstantsMsg.MSG_DELETE_OK);
-
-			//DELETE後のリストを取得
-			userInfoDeleteFormDetail.setUserInfoDeleteFormList(userInfoMapper.selectIdNameForDelete());
-
-		} catch (Exception e) {
-			userInfoDeleteFormDetail.setMessage(ConstantsMsg.MSG_DELETE_NG);
-			userInfoDeleteFormDetail.setUserInfoDeleteFormList(userInfoMapper.selectIdNameForDelete());
 		}
+		userInfoDeleteFormDetail.setMessage(ConstantsMsg.MSG_DELETE_OK);
+
+		//DELETE後のリストを取得
+		userInfoDeleteFormDetail.setUserInfoDeleteFormList(userInfoMapper.selectIdNameForDelete());
 
 		return userInfoDeleteFormDetail;
 	}

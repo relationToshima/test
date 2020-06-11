@@ -4,12 +4,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
-import com.example.demo.ServiceImpl.InsertToUserInfoServiceImpl;
 import com.example.demo.ServiceImpl.SalaryOutputServiceImpl;
 import com.example.demo.ServiceImpl.UserInfoDeleteServiceImpl;
 import com.example.demo.ServiceImpl.UserInfoRegisterServiceImpl;
@@ -30,8 +29,6 @@ public class UserInfoController {
 	@Autowired
 	SalaryOutputServiceImpl salaryOutputServiceImpl;
 	@Autowired
-	InsertToUserInfoServiceImpl inertToUserInfoServiceImpl;
-	@Autowired
 	UserInfoRegisterServiceImpl userInfoRegisterServiceImpl;
 	@Autowired
 	UserInfoDeleteServiceImpl userInfoDeleteServiceImpl;
@@ -48,8 +45,9 @@ public class UserInfoController {
 	 * @return
 	 */
 	@RequestMapping(value = "/top", method = RequestMethod.GET)
-	public String Top() {
-		return "top";
+	public ModelAndView Top(ModelAndView mav) {
+		mav.setViewName("top");
+		return mav;
 	}
 
 	/**
@@ -59,11 +57,12 @@ public class UserInfoController {
 	 * @return
 	 */
 	@RequestMapping(value = "/UserInfoSearch", method = RequestMethod.GET)
-	public String UserInfoSearchInit(Model model) {
+	public ModelAndView UserInfoSearchInit(ModelAndView mav) {
 		UserInfoSearchFormDetail userInfoSearchFormDetail = new UserInfoSearchFormDetail();
 		userInfoSearchFormDetail = userInfoSearchServiceImpl.UserInfoSearchInit();
-		model.addAttribute("userInfoSearchFormDetail", userInfoSearchFormDetail);
-		return "userInfoSearch";
+		mav.addObject("userInfoSearchFormDetail", userInfoSearchFormDetail);
+		mav.setViewName("userInfoSearch");
+		return mav;
 	}
 
 	/**
@@ -74,15 +73,15 @@ public class UserInfoController {
 	 * @return
 	 */
 	@RequestMapping(value = "/UserInfoSearch", params = "searchOn", method = RequestMethod.POST)
-	public String UserInfoSearchOn(
+	public ModelAndView UserInfoSearchOn(
 			@ModelAttribute("userInfoSearchFormDetail") UserInfoSearchFormDetail userInfoSearchFormDetail,
-			Model model) {
+			ModelAndView mav) {
 
 		userInfoSearchFormDetail = userInfoSearchServiceImpl.SearchOn(userInfoSearchFormDetail);
 
-		model.addAttribute("userInfoSearchFormDetail", userInfoSearchFormDetail);
-
-		return "userInfoSearch";
+		mav.addObject("userInfoSearchFormDetail", userInfoSearchFormDetail);
+		mav.setViewName("userInfoSearch");
+		return mav;
 	}
 
 	/**
@@ -93,15 +92,15 @@ public class UserInfoController {
 	 * @return
 	 */
 	@RequestMapping(value = "/UserInfoSearch", params = "searchOff", method = RequestMethod.POST)
-	public String UserInfoSearchOff(
+	public ModelAndView UserInfoSearchOff(
 			@ModelAttribute("userInfoSearchFormDetail") UserInfoSearchFormDetail userInfoSearchFormDetail,
-			Model model) {
+			ModelAndView mav) {
 
 		userInfoSearchFormDetail = userInfoSearchServiceImpl.SearchOff(userInfoSearchFormDetail);
 
-		model.addAttribute("userInfoSearchFormDetail", userInfoSearchFormDetail);
-
-		return "userInfoSearch";
+		mav.addObject("userInfoSearchFormDetail", userInfoSearchFormDetail);
+		mav.setViewName("userInfoSearch");
+		return mav;
 	}
 
 	/**
@@ -112,16 +111,16 @@ public class UserInfoController {
 	 * @return
 	 */
 	@RequestMapping(value = "/UserInfoSearch", params = "sortOn", method = RequestMethod.POST)
-
-	public String UserInfoSortOn(
+	public ModelAndView UserInfoSortOn(
 			@ModelAttribute("userInfoSearchFormDetail") UserInfoSearchFormDetail userInfoSearchFormDetail,
-			Model model) {
+			ModelAndView mav) {
 
 		userInfoSearchFormDetail = userInfoSearchServiceImpl.SortOn(userInfoSearchFormDetail);
 
-		model.addAttribute("userInfoSearchFormDetail", userInfoSearchFormDetail);
+		mav.addObject("userInfoSearchFormDetail", userInfoSearchFormDetail);
+		mav.setViewName("userInfoSearch");
 
-		return "userInfoSearch";
+		return mav;
 	}
 
 	/**
@@ -132,15 +131,16 @@ public class UserInfoController {
 	 * @return
 	 */
 	@RequestMapping(value = "/UserInfoSearch", params = "sortOff", method = RequestMethod.POST)
-	public String UserInfoSortOff(
+	public ModelAndView UserInfoSortOff(
 			@ModelAttribute("userInfoSearchFormDetail") UserInfoSearchFormDetail userInfoSearchFormDetail,
-			Model model) {
+			ModelAndView mav) {
 
 		userInfoSearchFormDetail = userInfoSearchServiceImpl.SortOff(userInfoSearchFormDetail);
 
-		model.addAttribute("userInfoSearchFormDetail", userInfoSearchFormDetail);
+		mav.addObject("userInfoSearchFormDetail", userInfoSearchFormDetail);
+		mav.setViewName("userInfoSearch");
 
-		return "userInfoSearch";
+		return mav;
 	}
 
 	/**
@@ -151,13 +151,14 @@ public class UserInfoController {
 	 * @return
 	 */
 	@RequestMapping(value = "UserInfoUpdate", params = "submit", method = RequestMethod.POST)
-	public String UserInfoUpdate(
+	public ModelAndView UserInfoUpdate(
 			@ModelAttribute("userInfoUpdateFormDetail") UserInfoUpdateFormDetail userInfoUpdateFormDetail,
-			Model model) {
+			ModelAndView mav) {
 
 		userInfoUpdateFormDetail = userInfoUpdateServiceImpl.UserInfoUpdate(userInfoUpdateFormDetail);
-		model.addAttribute("userInfoUpdateFormDetail", userInfoUpdateFormDetail);
-		return "UserInfoUpdate";
+		mav.addObject("userInfoUpdateFormDetail", userInfoUpdateFormDetail);
+		mav.setViewName("UserInfoUpdate");
+		return mav;
 
 	}
 
@@ -168,12 +169,13 @@ public class UserInfoController {
 	 * @return
 	 */
 	@RequestMapping(value = "/UserInfoUpdateList", method = RequestMethod.GET)
-	public String UserInfoUpdateListInit(Model model) {
+	public ModelAndView UserInfoUpdateListInit(ModelAndView mav) {
 		UserInfoUpdateListFormDetail userInfoUpdateListFormDetail = new UserInfoUpdateListFormDetail();
 		userInfoUpdateListFormDetail
 				.setUserInfoUpdateListFormList(userInfoUpdateListServiceImpl.UserInfoSelectForUpdateList());
-		model.addAttribute("userInfoUpdateListFormDetail", userInfoUpdateListFormDetail);
-		return "UserInfoUpdateList";
+		mav.addObject("userInfoUpdateListFormDetail", userInfoUpdateListFormDetail);
+		mav.setViewName("UserInfoUpdateList");
+		return mav;
 	}
 
 	/**
@@ -184,22 +186,24 @@ public class UserInfoController {
 	 * @return
 	 */
 	@RequestMapping(value = "/UserInfoUpdateList", params = "submit", method = RequestMethod.POST)
-	public String UserInfoUpdateInit(
+	public ModelAndView UserInfoUpdateInit(
 			@ModelAttribute("userInfoUpdateListFormDetail") UserInfoUpdateListFormDetail userInfoUpdateListFormDetail,
-			Model model) {
+			ModelAndView mav) {
 
 		//ラジオボタンの選択チェック
 		if (!(userInfoUpdateListServiceImpl.UserInfoUpdateListSelectCheck(userInfoUpdateListFormDetail))) {
 			userInfoUpdateListFormDetail.setMessage(ConstantsMsg.MSG_NOT_SELECT);
-			model.addAttribute("userInfoUpdateListFormDetail", userInfoUpdateListFormDetail);
-			return "userInfoUpdateList";
+			mav.addObject("userInfoUpdateListFormDetail", userInfoUpdateListFormDetail);
+			mav.setViewName("userInfoUpdateList");
+			return mav;
 		}
 
 		//更新画面のデータ取得
 		UserInfoUpdateFormDetail userInfoUpdateFormDetail = userInfoUpdateServiceImpl
 				.UserInfoUpdateInit(userInfoUpdateListFormDetail.getRadio());
-		model.addAttribute("userInfoUpdateFormDetail", userInfoUpdateFormDetail);
-		return "userInfoUpdate";
+		mav.addObject("userInfoUpdateFormDetail", userInfoUpdateFormDetail);
+		mav.setViewName("userInfoUpdate");
+		return mav;
 
 	}
 
@@ -210,11 +214,12 @@ public class UserInfoController {
 	 * @return
 	 */
 	@RequestMapping(value = "/UserInfoDelete", method = RequestMethod.GET)
-	public String UserInfoDeleteInit(Model model) {
+	public ModelAndView UserInfoDeleteInit(ModelAndView mav) {
 		UserInfoDeleteFormDetail userInfoDeleteFormDetail = new UserInfoDeleteFormDetail();
 		userInfoDeleteFormDetail.setUserInfoDeleteFormList(userInfoDeleteServiceImpl.UserInfoDeleteInit());
-		model.addAttribute("userInfoDeleteFormDetail", userInfoDeleteFormDetail);
-		return "userInfoDelete";
+		mav.addObject("userInfoDeleteFormDetail", userInfoDeleteFormDetail);
+		mav.setViewName("userInfoDelete");
+		return mav;
 	}
 
 	/**
@@ -225,15 +230,16 @@ public class UserInfoController {
 	 * @return
 	 */
 	@RequestMapping(value = "/UserInfoDelete", params = "submit", method = RequestMethod.POST)
-	public String UserInfoDelete(
+	public ModelAndView UserInfoDelete(
 			@ModelAttribute("userInfoDeleteFormDetail") UserInfoDeleteFormDetail userInfoDeleteFormDetail,
-			Model model) {
+			ModelAndView mav) {
 
 		//確認ポップアップ表示する
 
 		userInfoDeleteFormDetail = userInfoDeleteServiceImpl.UserInfoDelete(userInfoDeleteFormDetail);
-		model.addAttribute("userInfoDeleteFormDetail", userInfoDeleteFormDetail);
-		return "userInfoDelete";
+		mav.addObject("userInfoDeleteFormDetail", userInfoDeleteFormDetail);
+		mav.setViewName("userInfoDelete");
+		return mav;
 
 	}
 
@@ -244,13 +250,14 @@ public class UserInfoController {
 	 * @return
 	 */
 	@RequestMapping(value = "/SalaryInfoList", method = RequestMethod.GET)
-	public String SalaryInfoList(Model model) {
+	public ModelAndView SalaryInfoList(ModelAndView mav) {
 
 		/*従業員名・役職・基本給・基本給＋役職手当を取得*/
 		List<OfficeWorker> officeWorkerList = salaryOutputServiceImpl.SalaryCalculationOutput();
-		model.addAttribute("data", officeWorkerList);
+		mav.addObject("data", officeWorkerList);
+		mav.setViewName("salaryInfoList");
 
-		return "salaryInfoList";
+		return mav;
 	}
 
 	/**
@@ -260,10 +267,11 @@ public class UserInfoController {
 	 * @return
 	 */
 	@RequestMapping(value = "/UserInfoRegister", method = RequestMethod.GET)
-	public String UserInfoRegisterInit(Model model) {
+	public ModelAndView UserInfoRegisterInit(ModelAndView mav) {
 		UserInfoRegisterFormDetail userInfoRegisterFormDetail = userInfoRegisterServiceImpl.UserInfoRegisterInit();
-		model.addAttribute("userInfoRegisterFormDetail", userInfoRegisterFormDetail);
-		return "userInfoRegister";
+		mav.addObject("userInfoRegisterFormDetail", userInfoRegisterFormDetail);
+		mav.setViewName("userInfoRegister");
+		return mav;
 	}
 
 	/**
@@ -273,13 +281,14 @@ public class UserInfoController {
 	 * @return
 	 */
 	@RequestMapping(value = "/UserInfoRegister", params = "submit", method = RequestMethod.POST)
-	public String UserInfoRegister(
+	public ModelAndView UserInfoRegister(
 			@ModelAttribute("userInfoRegisterFormDetail") UserInfoRegisterFormDetail userInfoRegisterFormDetail,
-			Model model) {
+			ModelAndView mav) {
 
 		userInfoRegisterFormDetail = userInfoRegisterServiceImpl.UserInfoRegister(userInfoRegisterFormDetail);
-		model.addAttribute("userInfoRegisterFormDetail", userInfoRegisterFormDetail);
-		return "userInfoRegister";
+		mav.addObject("userInfoRegisterFormDetail", userInfoRegisterFormDetail);
+		mav.setViewName("userInfoRegister");
+		return mav;
 
 	}
 

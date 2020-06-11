@@ -85,13 +85,13 @@
 				registrant,
 				registrationdate)
 		values (
-			#{userInfoToInsert.id},
-			#{userInfoToInsert.nameReading},
-			#{userInfoToInsert.name},
-			#{userInfoToInsert.mailAddress},
-			#{userInfoToInsert.password},
-			#{userInfoToInsert.registrant},
-			#{userInfoToInsert.registrationDate})
+			#{id},
+			#{nameReading},
+			#{name},
+			#{mailAddress},
+			#{password},
+			#{registrant},
+			#{registrationDate})
 	</insert>
 
 	<select id="selectUserInfoForSearch" resultType="com.example.demo.form.UserInfoSearchForm">

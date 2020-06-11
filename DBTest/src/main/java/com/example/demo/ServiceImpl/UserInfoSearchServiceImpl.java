@@ -21,10 +21,6 @@ public class UserInfoSearchServiceImpl implements UserInfoSearchService {
 	UserInfoMapper userInfoMapper;
 	@Autowired
 	StringUtils stringUtils;
-	@Autowired
-	ConstantsMsg constantsMsg;
-	@Autowired
-	ConstantsData constantsData;
 
 	@Override
 	public UserInfoSearchFormDetail UserInfoSearchInit() {
@@ -70,7 +66,7 @@ public class UserInfoSearchServiceImpl implements UserInfoSearchService {
 
 		//未設定
 		if (stringUtils.isEmpty(columns) || stringUtils.isEmpty(key)) {
-			userInfoSearchFormDetail.setMessage(constantsMsg.MSG_NOT_SELECT);
+			userInfoSearchFormDetail.setMessage(ConstantsMsg.MSG_NOT_SELECT);
 
 			//プルダウン対処用
 			userInfoSearchFormDetail
@@ -88,72 +84,52 @@ public class UserInfoSearchServiceImpl implements UserInfoSearchService {
 
 		int count = dataList.size();
 
-		//一旦すべて表示off
+		//一旦すべて表示off & 検索列の抽出
+		List<String> tmpList = new ArrayList<String>();
 		for (int i = 0; i < count; i++) {
-			dataList.get(i).setOutputFlg(constantsData.OUTPUT_OFF);
+			dataList.get(i).setOutputFlg(ConstantsData.OUTPUT_OFF);
+			switch (columns) {
+			case "社員番号":
+				tmpList.add(dataList.get(i).getId());
+				break;
+			case "フリガナ":
+				tmpList.add(dataList.get(i).getNameReading());
+				break;
+			case "氏名":
+				tmpList.add(dataList.get(i).getName());
+				break;
+			case "メールアドレス":
+				tmpList.add(dataList.get(i).getMailAddress());
+				break;
+			case "認証失敗回数":
+				tmpList.add(dataList.get(i).getFailureTimes());
+				break;
+			case "最終ログイン日":
+				tmpList.add(dataList.get(i).getLastLoginDate());
+				break;
+			case "登録者":
+				tmpList.add(dataList.get(i).getRegistrant());
+				break;
+			case "登録日":
+				tmpList.add(dataList.get(i).getRegistrationDateString());
+				break;
+			case "更新者":
+				tmpList.add(dataList.get(i).getUpdater());
+				break;
+			case "更新日":
+				tmpList.add(dataList.get(i).getUpdatedDateString());
+				break;
+			case "役職":
+				tmpList.add(dataList.get(i).getPosition());
+				break;
+			}
 		}
 
 		//検索
 		for (int i = 0; i < count; i++) {
-
-			switch (columns) {
-			case "社員番号":
-				if (dataList.get(i).getId().contains(key)) {
-					dataList.get(i).setOutputFlg(constantsData.OUTPUT_ON);
-				}
-				break;
-			case "フリガナ":
-				if (dataList.get(i).getNameReading().contains(key)) {
-					dataList.get(i).setOutputFlg(constantsData.OUTPUT_ON);
-				}
-				break;
-			case "氏名":
-				if (dataList.get(i).getName().contains(key)) {
-					dataList.get(i).setOutputFlg(constantsData.OUTPUT_ON);
-				}
-				break;
-			case "メールアドレス":
-				if (dataList.get(i).getMailAddress().contains(key)) {
-					dataList.get(i).setOutputFlg(constantsData.OUTPUT_ON);
-				}
-				break;
-			case "認証失敗回数":
-				if (dataList.get(i).getFailureTimes().contains(key)) {
-					dataList.get(i).setOutputFlg(constantsData.OUTPUT_ON);
-				}
-				break;
-			case "最終ログイン日":
-				if (dataList.get(i).getLastLoginDate().contains(key)) {
-					dataList.get(i).setOutputFlg(constantsData.OUTPUT_ON);
-				}
-				break;
-			case "登録者":
-				if (dataList.get(i).getRegistrant().contains(key)) {
-					dataList.get(i).setOutputFlg(constantsData.OUTPUT_ON);
-				}
-				break;
-			case "登録日":
-				if (dataList.get(i).getRegistrationDateString().contains(key)) {
-					dataList.get(i).setOutputFlg(constantsData.OUTPUT_ON);
-				}
-				break;
-			case "更新者":
-				if (dataList.get(i).getUpdater().contains(key)) {
-					dataList.get(i).setOutputFlg(constantsData.OUTPUT_ON);
-				}
-				break;
-			case "更新日":
-				if (dataList.get(i).getUpdatedDateString().contains(key)) {
-					dataList.get(i).setOutputFlg(constantsData.OUTPUT_ON);
-				}
-				break;
-			case "役職":
-				if (dataList.get(i).getPosition().contains(key)) {
-					dataList.get(i).setOutputFlg(constantsData.OUTPUT_ON);
-				}
-				break;
+			if (tmpList.get(i).contains(key)) {
+				dataList.get(i).setOutputFlg(ConstantsData.OUTPUT_ON);
 			}
-
 		}
 
 		//プルダウン対処用
@@ -179,7 +155,7 @@ public class UserInfoSearchServiceImpl implements UserInfoSearchService {
 
 		//すべて表示on
 		for (int i = 0; i < count; i++) {
-			dataList.get(i).setOutputFlg(constantsData.OUTPUT_ON);
+			dataList.get(i).setOutputFlg(ConstantsData.OUTPUT_ON);
 		}
 
 		userInfoSearchFormDetail.setUserInfoSearchFormList(dataList);
@@ -209,149 +185,112 @@ public class UserInfoSearchServiceImpl implements UserInfoSearchService {
 		String columns = userInfoSearchFormDetail.getSelectColumnsForSort1Str();
 		String sortOrder = userInfoSearchFormDetail.getSelectSortOrder1Str();
 
+		//未設定
+		if (stringUtils.isEmpty(columns) || stringUtils.isEmpty(sortOrder)) {
+
+			userInfoSearchFormDetail.setMessage(ConstantsMsg.MSG_NOT_SELECT);
+
+			//プルダウン対処用
+			userInfoSearchFormDetail
+					.setSelectColumnsForSearch(
+							stringUtils.itemColumnsShaping(userInfoSearchFormDetail.getSelectColumnsForSearch()));
+			userInfoSearchFormDetail
+					.setSelectColumnsForSort1(
+							stringUtils.itemColumnsShaping(userInfoSearchFormDetail.getSelectColumnsForSort1()));
+			userInfoSearchFormDetail
+					.setSelectSortOrder1(
+							stringUtils.itemColumnsShaping(userInfoSearchFormDetail.getSelectSortOrder1()));
+
+			return userInfoSearchFormDetail;
+		}
+
 		int count = dataList.size();
 		UserInfoSearchForm tmp;
+		String tmpStr;
 
-		boolean sortExecutionFlg;
+		//並べ替えの基準列を別配列に準備
+		List<String> tmpList = new ArrayList<String>();
+		for (int i = 0; i < count; i++) {
+			switch (columns) {
+			case "社員番号":
+				tmpList.add(dataList.get(i).getId());
+				break;
+			case "フリガナ":
 
-		//並べ替え
-		for (int i = 0; i < count - 1; i++) {
-			for (int j = i; j < count; j++) {
+				tmpList.add(dataList.get(i).getNameReading());
+				break;
+			case "氏名":
 
-				sortExecutionFlg = false;
+				tmpList.add(dataList.get(i).getName());
+				break;
+			case "メールアドレス":
+				tmpList.add(dataList.get(i).getMailAddress());
+				break;
+			case "認証失敗回数":
 
-				switch (columns) {
-				case "社員番号":
-					if (sortOrder.equals("昇順")) {
-						if (dataList.get(i).getId().compareTo(dataList.get(j).getId()) > 0) {
-							sortExecutionFlg = true;
-						}
-					} else {
-						if (dataList.get(i).getId().compareTo(dataList.get(j).getId()) < 0) {
-							sortExecutionFlg = true;
-						}
+				tmpList.add(dataList.get(i).getFailureTimes());
+				break;
+			case "最終ログイン日":
+
+				tmpList.add(dataList.get(i).getLastLoginDate());
+				break;
+			case "登録者":
+
+				tmpList.add(dataList.get(i).getRegistrant());
+				break;
+			case "登録日":
+
+				tmpList.add(dataList.get(i).getRegistrationDateString());
+				break;
+			case "更新者":
+
+				tmpList.add(dataList.get(i).getUpdater());
+				break;
+			case "更新日":
+
+				tmpList.add(dataList.get(i).getUpdatedDateString());
+				break;
+			case "役職":
+
+				tmpList.add(dataList.get(i).getPosition());
+				break;
+			}
+		}
+
+		//実行
+		if (sortOrder.equals("昇順")) {
+			for (int i = 0; i < count - 1; i++) {
+				for (int j = i; j < count; j++) {
+					if (tmpList.get(i).compareTo(tmpList.get(j)) > 0) {
+
+						//並べ替え基準列の入れ替え
+						tmpStr = tmpList.get(i);
+						tmpList.set(i, tmpList.get(j));
+						tmpList.set(j, tmpStr);
+
+						//実データの入れ替え
+						tmp = dataList.get(i);
+						dataList.set(i, dataList.get(j));
+						dataList.set(j, tmp);
 					}
-					break;
-				case "フリガナ":
-					if (sortOrder.equals("昇順")) {
-						if (dataList.get(i).getNameReading().compareTo(dataList.get(j).getNameReading()) > 0) {
-							sortExecutionFlg = true;
-						}
-					} else {
-						if (dataList.get(i).getNameReading().compareTo(dataList.get(j).getNameReading()) < 0) {
-							sortExecutionFlg = true;
-						}
-					}
-					break;
-				case "氏名":
-					if (sortOrder.equals("昇順")) {
-						if (dataList.get(i).getName().compareTo(dataList.get(j).getName()) > 0) {
-							sortExecutionFlg = true;
-						}
-					} else {
-						if (dataList.get(i).getName().compareTo(dataList.get(j).getName()) < 0) {
-							sortExecutionFlg = true;
-						}
-					}
-					break;
-				case "メールアドレス":
-					if (sortOrder.equals("昇順")) {
-						if (dataList.get(i).getMailAddress().compareTo(dataList.get(j).getMailAddress()) > 0) {
-							sortExecutionFlg = true;
-						}
-					} else {
-						if (dataList.get(i).getMailAddress().compareTo(dataList.get(j).getMailAddress()) < 0) {
-							sortExecutionFlg = true;
-						}
-					}
-					break;
-				case "認証失敗回数":
-					if (sortOrder.equals("昇順")) {
-						if (dataList.get(i).getFailureTimes().compareTo(dataList.get(j).getFailureTimes()) > 0) {
-							sortExecutionFlg = true;
-						}
-					} else {
-						if (dataList.get(i).getFailureTimes().compareTo(dataList.get(j).getFailureTimes()) < 0) {
-							sortExecutionFlg = true;
-						}
-					}
-					break;
-				case "最終ログイン日":
-					if (sortOrder.equals("昇順")) {
-						if (dataList.get(i).getLastLoginDate().compareTo(dataList.get(j).getLastLoginDate()) > 0) {
-							sortExecutionFlg = true;
-						}
-					} else {
-						if (dataList.get(i).getLastLoginDate().compareTo(dataList.get(j).getLastLoginDate()) < 0) {
-							sortExecutionFlg = true;
-						}
-					}
-					break;
-				case "登録者":
-					if (sortOrder.equals("昇順")) {
-						if (dataList.get(i).getRegistrant().compareTo(dataList.get(j).getRegistrant()) > 0) {
-							sortExecutionFlg = true;
-						}
-					} else {
-						if (dataList.get(i).getRegistrant().compareTo(dataList.get(j).getRegistrant()) < 0) {
-							sortExecutionFlg = true;
-						}
-					}
-					break;
-				case "登録日":
-					if (sortOrder.equals("昇順")) {
-						if (dataList.get(i).getRegistrationDateString()
-								.compareTo(dataList.get(j).getRegistrationDateString()) > 0) {
-							sortExecutionFlg = true;
-						}
-					} else {
-						if (dataList.get(i).getRegistrationDateString()
-								.compareTo(dataList.get(j).getRegistrationDateString()) < 0) {
-							sortExecutionFlg = true;
-						}
-					}
-					break;
-				case "更新者":
-					if (sortOrder.equals("昇順")) {
-						if (dataList.get(i).getUpdater().compareTo(dataList.get(j).getUpdater()) > 0) {
-							sortExecutionFlg = true;
-						}
-					} else {
-						if (dataList.get(i).getUpdater().compareTo(dataList.get(j).getUpdater()) < 0) {
-							sortExecutionFlg = true;
-						}
-					}
-					break;
-				case "更新日":
-					if (sortOrder.equals("昇順")) {
-						if (dataList.get(i).getUpdatedDateString()
-								.compareTo(dataList.get(j).getUpdatedDateString()) > 0) {
-							sortExecutionFlg = true;
-						}
-					} else {
-						if (dataList.get(i).getUpdatedDateString()
-								.compareTo(dataList.get(j).getUpdatedDateString()) < 0) {
-							sortExecutionFlg = true;
-						}
-					}
-					break;
-				case "役職":
-					if (sortOrder.equals("昇順")) {
-						if (dataList.get(i).getPosition().compareTo(dataList.get(j).getPosition()) > 0) {
-							sortExecutionFlg = true;
-						}
-					} else {
-						if (dataList.get(i).getPosition().compareTo(dataList.get(j).getPosition()) < 0) {
-							sortExecutionFlg = true;
-						}
-					}
-					break;
 				}
+			}
 
-				if (sortExecutionFlg == true) {
-					tmp = dataList.get(i);
-					dataList.set(i, dataList.get(j));
-					dataList.set(j, tmp);
+		} else {
+			for (int i = 0; i < count - 1; i++) {
+				for (int j = i; j < count; j++) {
+					if (tmpList.get(i).compareTo(tmpList.get(j)) < 0) {
+
+						//並べ替え基準列の入れ替え
+						tmpStr = tmpList.get(i);
+						tmpList.set(i, tmpList.get(j));
+						tmpList.set(j, tmpStr);
+
+						//実データの入れ替え
+						tmp = dataList.get(i);
+						dataList.set(i, dataList.get(j));
+						dataList.set(j, tmp);
+					}
 				}
 			}
 		}
@@ -359,12 +298,10 @@ public class UserInfoSearchServiceImpl implements UserInfoSearchService {
 		userInfoSearchFormDetail.setUserInfoSearchFormList(dataList);
 
 		//プルダウン対処用
-		userInfoSearchFormDetail
-				.setSelectColumnsForSearch(
-						stringUtils.itemColumnsShaping(userInfoSearchFormDetail.getSelectColumnsForSearch()));
-		userInfoSearchFormDetail
-				.setSelectColumnsForSort1(
-						stringUtils.itemColumnsShaping(userInfoSearchFormDetail.getSelectColumnsForSort1()));
+		userInfoSearchFormDetail.setSelectColumnsForSearch(
+				stringUtils.itemColumnsShaping(userInfoSearchFormDetail.getSelectColumnsForSearch()));
+		userInfoSearchFormDetail.setSelectColumnsForSort1(
+				stringUtils.itemColumnsShaping(userInfoSearchFormDetail.getSelectColumnsForSort1()));
 		userInfoSearchFormDetail
 				.setSelectSortOrder1(stringUtils.itemColumnsShaping(userInfoSearchFormDetail.getSelectSortOrder1()));
 

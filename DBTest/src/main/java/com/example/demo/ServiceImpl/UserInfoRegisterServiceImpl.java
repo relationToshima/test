@@ -1,5 +1,6 @@
 package com.example.demo.ServiceImpl;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,8 @@ import com.example.demo.constants.message.ConstantsMsg;
 import com.example.demo.domain.SalaryInfo;
 import com.example.demo.domain.UserInfo;
 import com.example.demo.formDetail.UserInfoRegisterFormDetail;
+import com.example.demo.mapper.SalaryInfoMapper;
+import com.example.demo.mapper.UserInfoMapper;
 import com.example.demo.service.UserInfoRegisterService;
 import com.example.demo.utils.StringUtils;
 
@@ -19,7 +22,9 @@ public class UserInfoRegisterServiceImpl implements UserInfoRegisterService {
 	@Autowired
 	StringUtils stringUtils;
 	@Autowired
-	InsertToUserInfoServiceImpl insertToUserInfoServiceImpl;
+	UserInfoMapper userInfoMapper;
+	@Autowired
+	SalaryInfoMapper salaryInfoMapper;
 
 	@Override
 	public UserInfoRegisterFormDetail UserInfoRegisterInit() {
@@ -78,8 +83,25 @@ public class UserInfoRegisterServiceImpl implements UserInfoRegisterService {
 		salaryInfoToInsert.setBasicSalary(Integer.parseInt(form.getInputBasicSalary()));
 
 		//登録
-		boolean result;
-		result = insertToUserInfoServiceImpl.UserInfoInsert(userInfoToInsert, salaryInfoToInsert);
+		boolean result = true;
+		try {
+			//IDの採番
+			String strId = userInfoMapper.selectMaxId();
+			int id = Integer.parseInt(strId) + 1;
+			userInfoToInsert.setId(String.valueOf(String.format("%04d", id)));
+			salaryInfoToInsert.setId(userInfoToInsert.getId());
+			//登録日の設定
+			userInfoToInsert.setRegistrationDate(Date.valueOf(stringUtils.getNowDate()));
+
+			//userInfoのインサート
+			userInfoMapper.insertUserInfo(userInfoToInsert);
+
+			//salaryInfoのインサート
+			salaryInfoMapper.insertSalaryInfo(salaryInfoToInsert);
+
+		} catch (Exception e) {
+			result = false;
+		}
 
 		if (result == true) {
 			form.setInputName("");
@@ -116,7 +138,7 @@ public class UserInfoRegisterServiceImpl implements UserInfoRegisterService {
 	 * @param form UserInfoRegisterFormDetail
 	 * @return 初期化後の UserInfoRegisterFormDetail
 	 */
-	private UserInfoRegisterFormDetail FormReset(UserInfoRegisterFormDetail form) {
+	public UserInfoRegisterFormDetail FormReset(UserInfoRegisterFormDetail form) {
 		form.setNameErrFlg(false);
 		form.setNameErrMsg("");
 		form.setPositionErrFlg(false);

@@ -37,7 +37,7 @@ public class UserInfoSearchForm {
 	/** 表示フラグ(0:非表示/1:表示) **/
 	String outputFlg;
 
-	UserInfoSearchForm() {
+	public UserInfoSearchForm() {
 		outputFlg = "1";
 	}
 }

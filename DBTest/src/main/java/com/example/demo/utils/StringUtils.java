@@ -39,12 +39,15 @@ public class StringUtils {
 
 		boolean ans = false;
 
-		String regex_num = "^[0-9０-９]+$";
-		Pattern pattern = Pattern.compile(regex_num);
-		Matcher match = pattern.matcher(str);
+		if (!(isEmpty(str))) {
 
-		if (match.matches()) {
-			ans = true;
+			String regex_num = "^[0-9０-９]+$";
+			Pattern pattern = Pattern.compile(regex_num);
+			Matcher match = pattern.matcher(str);
+
+			if (match.matches()) {
+				ans = true;
+			}
 		}
 
 		return ans;
@@ -100,10 +103,14 @@ public class StringUtils {
 	//なぜかプルダウン用のListに”[”と”]”が含まれるので一時対処用
 	public List<String> itemColumnsShaping(List<String> itemColumns) {
 
-		int maxElements = itemColumns.size() - 1;
+		if (itemColumns.size() != 0) {
 
-		itemColumns.set(0, itemColumns.get(0).replace("[", ""));
-		itemColumns.set(maxElements, itemColumns.get(maxElements).replace("]", ""));
+			int maxElements = itemColumns.size() - 1;
+
+			itemColumns.set(0, itemColumns.get(0).replace("[", ""));
+			itemColumns.set(maxElements, itemColumns.get(maxElements).replace("]", ""));
+
+		}
 
 		return itemColumns;
 	}
