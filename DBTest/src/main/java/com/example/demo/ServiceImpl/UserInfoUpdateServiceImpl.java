@@ -30,6 +30,9 @@ public class UserInfoUpdateServiceImpl implements UserInfoUpdateService {
 		//データの取得
 		UserInfoUpdateFormDetail userInfoUpdateFormDetail = userInfoMapper.selectUserInfoForUpdate(id);
 
+		//基本給の型変換
+		userInfoUpdateFormDetail.setBasicSalaryStr(String.valueOf(userInfoUpdateFormDetail.getBasicSalary()));
+
 		//役職のプルダウンを設定
 		userInfoUpdateFormDetail.setSelectPosition(itemReturn());
 

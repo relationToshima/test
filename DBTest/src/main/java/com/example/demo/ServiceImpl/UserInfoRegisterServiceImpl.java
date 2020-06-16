@@ -87,7 +87,12 @@ public class UserInfoRegisterServiceImpl implements UserInfoRegisterService {
 		try {
 			//IDの採番
 			String strId = userInfoMapper.selectMaxId();
-			int id = Integer.parseInt(strId) + 1;
+			int id = 0;
+			if (stringUtils.isEmpty(strId)) {
+				id = 1;
+			} else {
+				id = Integer.parseInt(strId) + 1;
+			}
 			userInfoToInsert.setId(String.valueOf(String.format("%04d", id)));
 			salaryInfoToInsert.setId(userInfoToInsert.getId());
 			//登録日の設定
