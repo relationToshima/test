@@ -5,19 +5,25 @@
 <title>社員情報管理トップ</title>
 </head>
 <body>
+	<form th:action="@{/logout}" method="post">
+	    <button type="submit">ログアウト</button>
+	</form>
+	<form th:action="@{/top}" method="POST">
 
-	<table border="1">
-		<tr>
-			<td><a href="/UserInfoRegister"><button type="button">新規社員登録</button></a></td>
-			<td><a href="/SalaryInfoList"><button type="button">給与情報一覧</button></a></td>
-		</tr>
-		<tr>
-			<td><a href="/UserInfoUpdateList"><button type="button">社員情報更新</button></a></td>
-			<td><a href="/UserInfoDelete"><button type="button">社員情報削除</button></a></td>
-		</tr>
-		<tr>
-			<td><a href="/UserInfoSearch"><button type="button">社員情報検索</button></a></td>
-		</tr>
-	</table>
+		<table border="1">
+			<tr>
+				<td><input type = "submit" name = "register" value = "新規社員登録"></input></td>
+				<td><input type = "submit" name = "salaryList" value = "給与情報一覧"></input></td>
+			</tr>
+			<tr>
+				<td><input type = "submit" name = "update" value = "社員情報更新"></input></td>
+				<td><input type = "submit" name = "delete" value = "社員情報削除"></input></td>
+			</tr>
+			<tr>
+				<td><input type = "submit" name = "search" value = "社員情報検索"></input></td>
+			</tr>
+		</table>
+
+	</form>
 </body>
 </html>

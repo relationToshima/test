@@ -2,6 +2,7 @@ package com.example.demo.mapper;
 
 import java.util.List;
 
+import com.example.demo.domain.LoginUser;
 import com.example.demo.domain.UserInfo;
 import com.example.demo.form.UserInfoDeleteForm;
 import com.example.demo.form.UserInfoSearchForm;
@@ -26,4 +27,6 @@ public interface UserInfoMapper {
 	void insertUserInfo(UserInfo userInfoToInsert);
 
 	List<UserInfoSearchForm> selectUserInfoForSearch();
+
+	LoginUser selectUserAuth(String id);
 }

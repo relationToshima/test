@@ -5,9 +5,14 @@
 <title>社員情報削除</title>
 </head>
 <body>
-	<a href="/top"><button type="button">戻る</button></a>
-	<p th:text="${userInfoDeleteFormDetail.message}"></p>
-	<form action="/UserInfoDelete" th:object="${userInfoDeleteFormDetail}" method="POST">
+	<form th:action="@{/logout}" method="post">
+	    <button type="submit">ログアウト</button>
+	</form>
+	<form th:action="@{/UserInfoDelete}" th:object="${userInfoDeleteFormDetail}" method="POST">
+		<p>
+			<input type = "submit" name = "back" value = "戻る"></input>
+			<span th:text="${userInfoDeleteFormDetail.message}"></span>
+		</p>
 		<table border="1">
 			<tr>
 				<th>削除対象</th>

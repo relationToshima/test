@@ -26,7 +26,13 @@ import com.example.demo.ServiceImpl.UserInfoUpdateListServiceImpl;
 import com.example.demo.ServiceImpl.UserInfoUpdateServiceImpl;
 import com.example.demo.constants.ConstantsData;
 import com.example.demo.constants.message.ConstantsMsg;
-import com.example.demo.controller.UserInfoController;
+import com.example.demo.controller.SalaryInfoListController;
+import com.example.demo.controller.UserInfoDeleteController;
+import com.example.demo.controller.UserInfoRegisterController;
+import com.example.demo.controller.UserInfoSearchController;
+import com.example.demo.controller.UserInfoUpdateController;
+import com.example.demo.controller.UserInfoUpdateListController;
+import com.example.demo.controller.topController;
 import com.example.demo.domain.OfficeWorker;
 import com.example.demo.form.UserInfoDeleteForm;
 import com.example.demo.form.UserInfoSearchForm;
@@ -46,7 +52,13 @@ import com.example.demo.utils.StringUtils;
 @SpringBootTest
 public class JunitTester {
 
-	UserInfoController controller = new UserInfoController();
+	SalaryInfoListController salaryInfoListController = new SalaryInfoListController();
+	topController topController = new topController();
+	UserInfoDeleteController userInfoDeleteController = new UserInfoDeleteController();
+	UserInfoRegisterController userInfoRegisterController = new UserInfoRegisterController();
+	UserInfoSearchController userInfoSearchController = new UserInfoSearchController();
+	UserInfoUpdateController userInfoUpdateController = new UserInfoUpdateController();
+	UserInfoUpdateListController userInfoUpdateListController = new UserInfoUpdateListController();
 
 	@Before
 	public void init() {
@@ -88,8 +100,21 @@ public class JunitTester {
 	UserInfoUpdateListServiceImpl injectMocksUserInfoUpdateListServiceImpl = new UserInfoUpdateListServiceImpl();
 	@InjectMocks
 	UserInfoUpdateServiceImpl injectMocksUserInfoUpdateServiceImpl = new UserInfoUpdateServiceImpl();
+
 	@InjectMocks
-	UserInfoController injectMocksUserInfoController = new UserInfoController();
+	SalaryInfoListController injectMocksSalaryInfoListController = new SalaryInfoListController();
+	@InjectMocks
+	topController injectMockstopController = new topController();
+	@InjectMocks
+	UserInfoDeleteController injectMocksUserInfoDeleteController = new UserInfoDeleteController();
+	@InjectMocks
+	UserInfoRegisterController injectMocksUserInfoRegisterController = new UserInfoRegisterController();
+	@InjectMocks
+	UserInfoSearchController injectMocksUserInfoSearchController = new UserInfoSearchController();
+	@InjectMocks
+	UserInfoUpdateController injectMocksUserInfoUpdateController = new UserInfoUpdateController();
+	@InjectMocks
+	UserInfoUpdateListController injectMocksUserInfoUpdateListController = new UserInfoUpdateListController();
 
 	/***************StringUtils***************/
 
@@ -1563,8 +1588,7 @@ public class JunitTester {
 
 		ModelAndView mav = new ModelAndView();
 
-		UserInfoController controller = new UserInfoController();
-		ModelAndView actual = controller.Top(mav);
+		ModelAndView actual = topController.Top(mav);
 
 		assertThat(actual.getViewName()).isEqualTo("top");
 
@@ -1585,7 +1609,7 @@ public class JunitTester {
 
 		when(mockUserInfoSearchServiceImpl.UserInfoSearchInit()).thenReturn(formDetail);
 
-		ModelAndView actual = injectMocksUserInfoController.UserInfoSearchInit(mav);
+		ModelAndView actual = injectMocksUserInfoSearchController.UserInfoSearchInit(mav);
 
 		assertThat(actual.getViewName()).isEqualTo("userInfoSearch");
 		Object obj = actual.getModel().get("userInfoSearchFormDetail");
@@ -1608,7 +1632,7 @@ public class JunitTester {
 
 		when(mockUserInfoSearchServiceImpl.SearchOn(Mockito.any())).thenReturn(formDetail);
 		ModelAndView mav = new ModelAndView();
-		ModelAndView actual = injectMocksUserInfoController.UserInfoSearchOn(null, mav);
+		ModelAndView actual = injectMocksUserInfoSearchController.UserInfoSearchOn(null, mav);
 
 		assertThat(actual.getViewName()).isEqualTo("userInfoSearch");
 		Object obj = actual.getModel().get("userInfoSearchFormDetail");
@@ -1630,7 +1654,7 @@ public class JunitTester {
 
 		when(mockUserInfoSearchServiceImpl.SearchOff(Mockito.any())).thenReturn(formDetail);
 		ModelAndView mav = new ModelAndView();
-		ModelAndView actual = injectMocksUserInfoController.UserInfoSearchOff(null, mav);
+		ModelAndView actual = injectMocksUserInfoSearchController.UserInfoSearchOff(null, mav);
 
 		assertThat(actual.getViewName()).isEqualTo("userInfoSearch");
 		Object obj = actual.getModel().get("userInfoSearchFormDetail");
@@ -1652,7 +1676,7 @@ public class JunitTester {
 
 		when(mockUserInfoSearchServiceImpl.SortOn(Mockito.any())).thenReturn(formDetail);
 		ModelAndView mav = new ModelAndView();
-		ModelAndView actual = injectMocksUserInfoController.UserInfoSortOn(null, mav);
+		ModelAndView actual = injectMocksUserInfoSearchController.UserInfoSortOn(null, mav);
 
 		assertThat(actual.getViewName()).isEqualTo("userInfoSearch");
 		Object obj = actual.getModel().get("userInfoSearchFormDetail");
@@ -1675,7 +1699,7 @@ public class JunitTester {
 
 		when(mockUserInfoSearchServiceImpl.SortOff(Mockito.any())).thenReturn(formDetail);
 		ModelAndView mav = new ModelAndView();
-		ModelAndView actual = injectMocksUserInfoController.UserInfoSortOff(null, mav);
+		ModelAndView actual = injectMocksUserInfoSearchController.UserInfoSortOff(null, mav);
 
 		assertThat(actual.getViewName()).isEqualTo("userInfoSearch");
 		Object obj = actual.getModel().get("userInfoSearchFormDetail");
@@ -1693,7 +1717,7 @@ public class JunitTester {
 
 		when(mockUserInfoUpdateServiceImpl.UserInfoUpdate(Mockito.any())).thenReturn(formDetail);
 		ModelAndView mav = new ModelAndView();
-		ModelAndView actual = injectMocksUserInfoController.UserInfoUpdate(null, mav);
+		ModelAndView actual = injectMocksUserInfoUpdateController.UserInfoUpdate(null, mav);
 
 		assertThat(actual.getViewName()).isEqualTo("UserInfoUpdate");
 		Object obj = actual.getModel().get("userInfoUpdateFormDetail");
@@ -1712,7 +1736,7 @@ public class JunitTester {
 
 		when(mockUserInfoUpdateListServiceImpl.UserInfoSelectForUpdateList()).thenReturn(list);
 		ModelAndView mav = new ModelAndView();
-		ModelAndView actual = injectMocksUserInfoController.UserInfoUpdateListInit(mav);
+		ModelAndView actual = injectMocksUserInfoUpdateListController.UserInfoUpdateListInit(mav);
 
 		assertThat(actual.getViewName()).isEqualTo("UserInfoUpdateList");
 		Object obj = actual.getModel().get("userInfoUpdateListFormDetail");
@@ -1733,7 +1757,8 @@ public class JunitTester {
 		UserInfoUpdateListFormDetail userInfoUpdateListFormDetail = new UserInfoUpdateListFormDetail();
 		userInfoUpdateListFormDetail.setUserInfoUpdateListFormList(list);
 		ModelAndView mav = new ModelAndView();
-		ModelAndView actual = injectMocksUserInfoController.UserInfoUpdateInit(userInfoUpdateListFormDetail, mav);
+		ModelAndView actual = injectMocksUserInfoUpdateListController.UserInfoUpdateInit(userInfoUpdateListFormDetail,
+				mav);
 
 		assertThat(actual.getViewName()).isEqualTo("userInfoUpdateList");
 		Object obj = actual.getModel().get("userInfoUpdateListFormDetail");
@@ -1760,7 +1785,8 @@ public class JunitTester {
 		formDetail.setId("0002");
 		when(mockUserInfoUpdateServiceImpl.UserInfoUpdateInit(Mockito.any())).thenReturn(formDetail);
 
-		ModelAndView actual = injectMocksUserInfoController.UserInfoUpdateInit(userInfoUpdateListFormDetail, mav);
+		ModelAndView actual = injectMocksUserInfoUpdateListController.UserInfoUpdateInit(userInfoUpdateListFormDetail,
+				mav);
 
 		assertThat(actual.getViewName()).isEqualTo("userInfoUpdate");
 		Object obj = actual.getModel().get("userInfoUpdateFormDetail");
@@ -1779,7 +1805,7 @@ public class JunitTester {
 
 		when(mockUserInfoDeleteServiceImpl.UserInfoDeleteInit()).thenReturn(list);
 		ModelAndView mav = new ModelAndView();
-		ModelAndView actual = injectMocksUserInfoController.UserInfoDeleteInit(mav);
+		ModelAndView actual = injectMocksUserInfoDeleteController.UserInfoDeleteInit(mav);
 
 		assertThat(actual.getViewName()).isEqualTo("userInfoDelete");
 		Object obj = actual.getModel().get("userInfoDeleteFormDetail");
@@ -1801,7 +1827,7 @@ public class JunitTester {
 		when(mockUserInfoDeleteServiceImpl.UserInfoDelete(Mockito.any())).thenReturn(formDetail);
 		UserInfoDeleteFormDetail userInfoDeleteFormDetail = new UserInfoDeleteFormDetail();
 		ModelAndView mav = new ModelAndView();
-		ModelAndView actual = injectMocksUserInfoController.UserInfoDelete(userInfoDeleteFormDetail, mav);
+		ModelAndView actual = injectMocksUserInfoDeleteController.UserInfoDelete(userInfoDeleteFormDetail, mav);
 
 		assertThat(actual.getViewName()).isEqualTo("userInfoDelete");
 		Object obj = actual.getModel().get("userInfoDeleteFormDetail");
@@ -1821,7 +1847,7 @@ public class JunitTester {
 		when(mockSalaryOutputServiceImpl.SalaryCalculationOutput()).thenReturn(list);
 
 		ModelAndView mav = new ModelAndView();
-		ModelAndView actual = injectMocksUserInfoController.SalaryInfoList(mav);
+		ModelAndView actual = injectMocksSalaryInfoListController.SalaryInfoList(mav);
 
 		assertThat(actual.getViewName()).isEqualTo("salaryInfoList");
 		Object obj = actual.getModel().get("data");
@@ -1838,7 +1864,7 @@ public class JunitTester {
 		when(mockUserInfoRegisterServiceImpl.UserInfoRegisterInit()).thenReturn(formDetail);
 
 		ModelAndView mav = new ModelAndView();
-		ModelAndView actual = injectMocksUserInfoController.UserInfoRegisterInit(mav);
+		ModelAndView actual = injectMocksUserInfoRegisterController.UserInfoRegisterInit(mav);
 
 		assertThat(actual.getViewName()).isEqualTo("userInfoRegister");
 		Object obj = actual.getModel().get("userInfoRegisterFormDetail");
@@ -1856,7 +1882,7 @@ public class JunitTester {
 
 		ModelAndView mav = new ModelAndView();
 		UserInfoRegisterFormDetail userInfoRegisterFormDetail = new UserInfoRegisterFormDetail();
-		ModelAndView actual = injectMocksUserInfoController.UserInfoRegister(userInfoRegisterFormDetail, mav);
+		ModelAndView actual = injectMocksUserInfoRegisterController.UserInfoRegister(userInfoRegisterFormDetail, mav);
 		assertThat(actual.getViewName()).isEqualTo("userInfoRegister");
 
 		Object obj = actual.getModel().get("userInfoRegisterFormDetail");

@@ -5,10 +5,14 @@
 <title>社員情報更新</title>
 </head>
 <body>
-	<a href="/UserInfoUpdateList"><button type="button">戻る</button></a>
-	<p th:text="${userInfoUpdateFormDetail.message}"></p>
-
-	<form action="/UserInfoUpdate" th:object="${userInfoUpdateFormDetail}" method="POST">
+	<form th:action="@{/logout}" method="post">
+	    <button type="submit">ログアウト</button>
+	</form>
+	<form th:action="@{/UserInfoUpdate}" th:object="${userInfoUpdateFormDetail}" method="POST">
+		<p>
+			<input type = "submit" name = "back" value = "戻る"></input>
+			<span th:text="${userInfoUpdateFormDetail.message}"></span>
+		</p>
 		<input type="hidden" th:name="id" th:value="${userInfoUpdateFormDetail.id}">
 		<table>
 			<tr>

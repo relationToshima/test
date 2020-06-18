@@ -5,7 +5,12 @@
 <title>給与情報一覧</title>
 </head>
 <body>
-	<a href="/top"><button type="button">戻る</button></a>
+	<form th:action="@{/logout}" method="post">
+	    <button type="submit">ログアウト</button>
+	</form>
+	<form th:action="@{/SalaryInfoList}" method="POST">
+		<input type = "submit" name = "back" value = "戻る"></input>
+	</form>
 	<p th:text="${result}"></p>
 	<table border="1">
 		<tr>

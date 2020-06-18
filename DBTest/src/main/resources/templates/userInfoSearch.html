@@ -5,9 +5,16 @@
 <title>社員情報検索</title>
 </head>
 <body>
-	<a href="/top"><button type="button">戻る</button></a>
-	<p th:text="${userInfoSearchFormDetail.message}"></p>
-	<form action="/UserInfoSearch" th:object="${userInfoSearchFormDetail}" method="POST">
+	<form th:action="@{/logout}" method="post">
+	    <button type="submit">ログアウト</button>
+	</form>
+	<form th:action="@{/UserInfoSearch}" th:object="${userInfoSearchFormDetail}" method="POST">
+
+		<p>
+			<input type = "submit" name = "back" value = "戻る"></input>
+			<span th:text="${userInfoSearchFormDetail.message}"></span>
+		</p>
+
 		<table>
 			<tr>
 				<td>

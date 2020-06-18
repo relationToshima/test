@@ -1,0 +1,19 @@
+
+<html>
+<head>
+<meta charset="utf-8" />
+<title>社員情報管理 ログイン</title>
+</head>
+<body>
+	<form th:action="@{/sign_in}" method="post">
+		<p>社員番号</p>
+		<p><input type="text" name="userName"></p>
+
+		<p>パスワード</p>
+        <p><input type="password" name="password"></p>
+
+        <input type="submit" value="Login"></input>
+    </form>
+    <p th:if="${param.error}">社員番号またはパスワードに誤りがあります</p>
+</body>
+</html>

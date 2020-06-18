@@ -115,4 +115,18 @@
 		order by id asc
 	</select>
 
+	<select id="selectUserAuth" resultType="com.example.demo.domain.LoginUser">
+		select
+			userinfo.id,
+			name,
+			password,
+			position
+		from
+			userinfo,
+			salaryinfo
+		where
+			userinfo.id = salaryinfo.id and
+			userinfo.id = #{id}
+	</select>
+
 </mapper>
