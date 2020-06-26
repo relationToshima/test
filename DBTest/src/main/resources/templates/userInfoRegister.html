@@ -6,40 +6,139 @@
 </head>
 <body>
 	<form th:action="@{/logout}" method="post">
-	    <button type="submit">ログアウト</button>
+		こんにちは！<span sec:authentication="principal.username"></span>さん
+	    <button type="submit">ログアウト</button><br>
 	</form>
-	<form th:action="@{/UserInfoRegister}" th:object="${userInfoRegisterFormDetail}" method="POST">
+	<form th:action="@{/UserInfoRegister}" enctype="multipart/form-data" th:object="${userInfoRegisterFormDetail}" method="POST">
 		<p>
 			<input type = "submit" name = "back" value = "戻る"></input>
 			<span th:text="${userInfoRegisterFormDetail.message}"></span>
 		</p>
 
 		<table>
-			<tr><th align="left">氏名</th></tr>
 			<tr>
-				<td><input type="text" name="inputName" th:value="${userInfoRegisterFormDetail.inputName}"></input></td>
-				<td><p th:text="${userInfoRegisterFormDetail.nameErrMsg}"></p></td>
-			</tr>
-
-			<tr><th align="left">役職</th></tr>
-			<tr>
-			<!--
-				<td><input type="text" name="inputPosition" th:value="${userInfoRegisterFormDetail.inputPosition}"></input></td>
-			-->
 				<td>
-					<select name="inputPosition">
-						<option value="">---</option>
-						<option th:each="data : *{selectPosition}" th:value="${data}" th:text="${data}" th:selected="${data}==*{inputPosition}"></option>
-					</select>
-					<input type="hidden" name="selectPosition" th:value="*{selectPosition}"></input>
+					<table border="1" style="width: 500px;">
+						<tr>
+							<th style="width: 30%;">フリガナ</th>
+							<td style="width: 70%;"><input type="text" name="inputNameReading" th:value="${userInfoRegisterFormDetail.inputNameReading}" style="width: 100%;"></input></td>
+						</tr>
+					</table>
 				</td>
-				<td><p th:text="${userInfoRegisterFormDetail.positionErrMsg}"></p></td>
+				<td>
+					<!-- <td><p th:if="${#fields.hasErrors('*{inputNameReading}')}" th:errors="*{inputNameReading}"></p></td> -->
+				</td>
 			</tr>
 
-			<tr><th align="left">基本給</th></tr>
 			<tr>
-				<td><input type="text" name="inputBasicSalary" th:value="${userInfoRegisterFormDetail.inputBasicSalary}"></input></td>
-				<td><p th:text="${userInfoRegisterFormDetail.basicSalaryErrMsg}"></p></td>
+				<td>
+					<table border="1" style="width: 500px;">
+						<tr>
+							<th style="width: 30%;">氏名</th>
+							<td style="width: 70%;"><input type="text" name="inputName" th:value="${userInfoRegisterFormDetail.inputName}" style="width: 100%;"></input></td>
+						</tr>
+					</table>
+				</td>
+				<td>
+					<p th:if="${#fields.hasErrors('*{inputName}')}" th:errors="*{inputName}"></p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<table border="1" style="width: 500px;">
+						<tr>
+							<th style="width: 30%;">メールアドレス</th>
+							<td style="width: 70%;"><input type="text" name="inputMailAddress" th:value="${userInfoRegisterFormDetail.inputMailAddress}" style="width: 100%;"></input></td>
+						</tr>
+					</table>
+				</td>
+				<td>
+					<p th:if="${#fields.hasErrors('*{inputMailAddress}')}" th:errors="*{inputMailAddress}"></p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<table border="1" style="width: 500px;">
+						<tr>
+							<th style="width: 30%;">パスワード</th>
+							<td style="width: 70%;"><input type="text" name="inputPassword" th:value="${userInfoRegisterFormDetail.inputPassword}" style="width: 100%;"></input></td>
+						</tr>
+					</table>
+				</td>
+				<td>
+					<p th:if="${#fields.hasErrors('*{inputPassword}')}" th:errors="*{inputPassword}"></p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<table border="1" style="width: 500px;">
+						<tr>
+							<th style="width: 30%;">役職</th>
+							<td style="width: 70%;">
+								<select name="inputPosition" style="width: 100%;">
+									<option value="">---</option>
+									<option th:each="data : *{selectPosition}" th:value="${data}" th:text="${data}" th:selected="${data}==*{inputPosition}"></option>
+								</select>
+								<input type="hidden" name="selectPosition" th:value="*{selectPosition}"></input>
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td>
+					<p th:if="${#fields.hasErrors('*{inputPosition}')}" th:errors="*{inputPosition}"></p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<table border="1" style="width: 500px;">
+						<tr>
+							<th style="width: 30%;">基本給</th>
+							<td style="width: 70%;"><input type="text" name="inputBasicSalary" th:value="${userInfoRegisterFormDetail.inputBasicSalary}" style="width: 100%;"></input></td>
+						</tr>
+					</table>
+				</td>
+				<td>
+					<p th:if="${#fields.hasErrors('*{inputBasicSalary}')}" th:errors="*{inputBasicSalary}"></p>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<table border="1" style="width: 500px;">
+						<tr>
+							<th style="width: 30%;">
+								<div>
+									<p>画像</p>
+									<p th:unless="*{imageName}"  align="center">
+										<input type="submit" name="imageUpload" value="アップロード"></input>
+									</p>
+									<p  th:if="*{imageName}"  align="center">
+										<input type="submit" name="imageDelete" value="取り消し"></input>
+									</p>
+								</div>
+							</th>
+							<td style="width: 70%;"  align="center">
+								<p th:unless="*{imageName}">
+									<input type="file" name="image" th:value="*{image}" style="width: 100%;"></input>
+								</p>
+								<div th:if="*{imageName}"  align="center">
+									<p th:text="*{imageName}"></p>
+									<img th:src="*{imageOutput}" width="200" height="200">
+									<input type="hidden" name="imageName" th:value="*{imageName}"></input>
+
+									<input type="hidden" name="imageOutput" th:value="*{imageOutput}"></input>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td>
+					<p th:text="*{imageErrMessage}"></p>
+				</td>
 			</tr>
 		</table>
 		<br>

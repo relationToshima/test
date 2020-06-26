@@ -6,7 +6,8 @@
 </head>
 <body>
 	<form th:action="@{/logout}" method="post">
-	    <button type="submit">ログアウト</button>
+		こんにちは！<span sec:authentication="principal.username"></span>さん
+	    <button type="submit">ログアウト</button><br>
 	</form>
 	<form th:action="@{/UserInfoSearch}" th:object="${userInfoSearchFormDetail}" method="POST">
 
@@ -136,37 +137,37 @@
 			</tr>
 			<tr th:each="data , stat : ${userInfoSearchFormDetail.userInfoSearchFormList}">
 				<div th:if="${data.outputFlg == '1'}">
-					<td>
+					<td  align="center">
 						<p th:text="${data.id}"></p>
 					</td>
-					<td>
+					<td  align="center">
 						<p th:text="${data.nameReading}"></p>
 					</td>
-					<td>
+					<td  align="center">
 						<p th:text="${data.name}"></p>
 					</td>
-					<td>
+					<td  align="center">
 						<p th:text="${data.mailAddress}"></p>
 					</td>
-					<td>
+					<td  align="center">
 						<p th:text="${data.failureTimes}"></p>
 					</td>
-					<td>
+					<td  align="center">
 						<p th:text="${data.lastLoginDate}"></p>
 					</td>
-					<td>
+					<td  align="center">
 						<p th:text="${data.registrant}"></p>
 					</td>
-					<td>
+					<td  align="center">
 						<p th:text="${data.registrationDateString}"></p>
 					</td>
-					<td>
+					<td  align="center">
 						<p th:text="${data.updater}"></p>
 					</td>
-					<td>
+					<td  align="center">
 						<p th:text="${data.updatedDateString}"></p>
 					</td>
-					<td>
+					<td  align="center">
 						<p th:text="${data.position}"></p>
 					</td>
 				</div>

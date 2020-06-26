@@ -1,12 +1,27 @@
 package com.example.demo.ServiceImpl;
 
+import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.imageio.ImageIO;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.constants.ConstantsData;
 import com.example.demo.constants.message.ConstantsMsg;
 import com.example.demo.domain.SalaryInfo;
 import com.example.demo.domain.UserInfo;
@@ -14,6 +29,7 @@ import com.example.demo.formDetail.UserInfoRegisterFormDetail;
 import com.example.demo.mapper.SalaryInfoMapper;
 import com.example.demo.mapper.UserInfoMapper;
 import com.example.demo.service.UserInfoRegisterService;
+import com.example.demo.utils.ImageUtils;
 import com.example.demo.utils.StringUtils;
 
 @Service
@@ -25,13 +41,80 @@ public class UserInfoRegisterServiceImpl implements UserInfoRegisterService {
 	UserInfoMapper userInfoMapper;
 	@Autowired
 	SalaryInfoMapper salaryInfoMapper;
+	@Autowired
+	ImageUtils imageUtils;
 
 	@Override
 	public UserInfoRegisterFormDetail UserInfoRegisterInit() {
 		UserInfoRegisterFormDetail userInfoRegisterFormDetail = new UserInfoRegisterFormDetail();
+		File file = new File(ConstantsData.FILE_UPLOAD_PATH);
+		if (!(file.exists())) {
+			file.mkdir();
+		}
 		userInfoRegisterFormDetail.setSelectPosition(itemReturn());
 		return userInfoRegisterFormDetail;
 
+	}
+
+	@Override
+	public UserInfoRegisterFormDetail imageUpload(UserInfoRegisterFormDetail form) {
+
+		//０バイト、未選択チェック
+		if (form.getImage().isEmpty()) {
+			form.setImageErrMessage("選択された画像が不正、または選択されていません。");
+			return form;
+		}
+
+		//拡張子チェック（JPEG/PNG/GIF許容）
+		String extension = form.getImage().getOriginalFilename()
+				.substring(form.getImage().getOriginalFilename().lastIndexOf(".") + 1);
+		if (!(extension.equalsIgnoreCase("JPEG") || extension.equalsIgnoreCase("JPG")
+				|| extension.equalsIgnoreCase("PNG"))) {
+			form.setImageErrMessage(
+					"選択された画像の拡張子が不正です。許容されている拡張子は「JPEG(JPG)」「PNG」です。");
+			return form;
+		}
+
+		//チェックOK＋アップロード
+		form.setImageName(form.getImage().getOriginalFilename());
+		Path uploadfilePath = Paths.get(ConstantsData.FILE_UPLOAD_PATH + "\\" + form.getImageName());
+		try (OutputStream os = Files.newOutputStream(uploadfilePath, StandardOpenOption.CREATE)) {
+			byte[] bytes = form.getImage().getBytes();
+			os.write(bytes);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		//画像表示用変換
+		if (!(stringUtils.isEmpty(form.getImageName()))) {
+			try {
+				form.setImageOutput(imageUtils.GetImageOutputString(
+						form.getImageName(), form.getImage().getBytes()));
+			} catch (IOException e) {
+				form.setImageErrMessage("エンコードに失敗しました。");
+				e.printStackTrace();
+			}
+		}
+		//tipartFile型 image はもう不要なので削除
+		form.setImage(null);
+
+		return form;
+
+	}
+
+	@Override
+	public UserInfoRegisterFormDetail imageDelete(UserInfoRegisterFormDetail userInfoRegisterFormDetail) {
+
+		//画像関連のデータをすべて削除
+		userInfoRegisterFormDetail.setImage(null);
+		userInfoRegisterFormDetail.setImageName(null);
+		userInfoRegisterFormDetail.setImageOutput(null);
+		userInfoRegisterFormDetail.setImageErrMessage(null);
+		userInfoRegisterFormDetail.setImageData(null);
+
+		imageUtils.DeleteUploadFile();
+
+		return userInfoRegisterFormDetail;
 	}
 
 	@Override
@@ -45,47 +128,13 @@ public class UserInfoRegisterServiceImpl implements UserInfoRegisterService {
 		form.setInputPosition(stringUtils.trim(form.getInputPosition()));
 		form.setInputBasicSalary(stringUtils.trim(form.getInputBasicSalary()));
 
-		/*データチェック*/
-		//氏名（必須チェック）
-		if (stringUtils.isEmpty(form.getInputName())) {
-			form.setNameErrFlg(true);
-			form.setNameErrMsg("氏名" + ConstantsMsg.ERR_MSG_NULL);
-		}
-
-		//役職（必須チェック）
-		if (stringUtils.isEmpty(form.getInputPosition())) {
-			form.setPositionErrFlg(true);
-			form.setPositionErrMsg("役職" + ConstantsMsg.ERR_MSG_NULL);
-		}
-
-		//基本給（必須チェック＋数値チェック）
-		if (stringUtils.isEmpty(form.getInputBasicSalary())) {
-			form.setBasicSalaryErrFlg(true);
-			form.setBasicSalaryErrMsg("基本給" + ConstantsMsg.ERR_MSG_NULL);
-		} else if (!(stringUtils.isNum(form.getInputBasicSalary()))) {
-			form.setBasicSalaryErrFlg(true);
-			form.setBasicSalaryErrMsg("基本給" + ConstantsMsg.ERR_MSG_NOT_NUM);
-		}
-
-		//いずれかの項目でエラーがあった場合、返却する
-		if (form.isNameErrFlg() == true
-				|| form.isPositionErrFlg() == true
-				|| form.isBasicSalaryErrFlg() == true) {
-			return form;
-		}
-
-		//データのDB登録準備
-		UserInfo userInfoToInsert = new UserInfo();
-		userInfoToInsert.setName(form.getInputName());
-
-		SalaryInfo salaryInfoToInsert = new SalaryInfo();
-		salaryInfoToInsert.setPosition(form.getInputPosition());
-		salaryInfoToInsert.setBasicSalary(Integer.parseInt(form.getInputBasicSalary()));
-
 		//登録
 		boolean result = true;
 		try {
-			//IDの採番
+
+			//userinfo準備
+			UserInfo userInfoToInsert = new UserInfo();
+			//社員番号（自動採番）
 			String strId = userInfoMapper.selectMaxId();
 			int id = 0;
 			if (stringUtils.isEmpty(strId)) {
@@ -94,9 +143,48 @@ public class UserInfoRegisterServiceImpl implements UserInfoRegisterService {
 				id = Integer.parseInt(strId) + 1;
 			}
 			userInfoToInsert.setId(String.valueOf(String.format("%04d", id)));
-			salaryInfoToInsert.setId(userInfoToInsert.getId());
-			//登録日の設定
+			//フリガナ
+			userInfoToInsert.setNameReading(form.getInputNameReading());
+			//氏名
+			userInfoToInsert.setName(form.getInputName());
+			//メールアドレス
+			userInfoToInsert.setMailAddress(form.getInputMailAddress());
+			//パスワード
+			userInfoToInsert.setPassword(form.getInputPassword());
+			//認証失敗回数
+			userInfoToInsert.setFailureTimes("0");
+			//登録者
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			userInfoToInsert.setRegistrant(auth.getName());
+			//登録日
 			userInfoToInsert.setRegistrationDate(Date.valueOf(stringUtils.getNowDate()));
+			//画像名
+			userInfoToInsert.setImageName(form.getImageName());
+			//画像
+			try {
+				String s = ConstantsData.FILE_UPLOAD_PATH + "\\" + form.getImageName();
+				BufferedImage bImage = ImageIO
+						.read(new File(s));
+				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				BufferedOutputStream os = new BufferedOutputStream(bos);
+				bImage.flush();
+				//拡張子の取得
+				String extension = form.getImageName()
+						.substring(form.getImageName().lastIndexOf(".") + 1);
+				ImageIO.write(bImage, extension, os); //. png 型
+				userInfoToInsert.setImageData(bos.toByteArray());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			//salaryInfo準備
+			SalaryInfo salaryInfoToInsert = new SalaryInfo();
+			//社員番号
+			salaryInfoToInsert.setId(userInfoToInsert.getId());
+			//役職
+			salaryInfoToInsert.setPosition(form.getInputPosition());
+			//基本給
+			salaryInfoToInsert.setBasicSalary(Integer.parseInt(form.getInputBasicSalary()));
 
 			//userInfoのインサート
 			userInfoMapper.insertUserInfo(userInfoToInsert);
@@ -106,12 +194,27 @@ public class UserInfoRegisterServiceImpl implements UserInfoRegisterService {
 
 		} catch (Exception e) {
 			result = false;
+			e.printStackTrace();
 		}
 
 		if (result == true) {
-			form.setInputName("");
-			form.setInputPosition("");
-			form.setInputBasicSalary("");
+			form.setInputNameReading(null);
+			form.setInputName(null);
+			form.setInputMailAddress(null);
+			form.setInputPassword(null);
+			form.setInputPosition(null);
+			form.setInputBasicSalary(null);
+			form.setImageName(null);
+			form.setImageData(null);
+			form.setImage(null);
+			//uploadFileにデータがある場合、削除
+			File file = new File(ConstantsData.FILE_UPLOAD_PATH);
+			File[] files = file.listFiles();
+			if (files.length != 0) {
+				for (int i = 0; i < files.length; i++) {
+					files[i].delete();
+				}
+			}
 			form.setMessage(ConstantsMsg.MSG_REGISTER_OK);
 		} else {
 			form.setMessage(ConstantsMsg.MSG_REGISTER_NG);
@@ -144,15 +247,11 @@ public class UserInfoRegisterServiceImpl implements UserInfoRegisterService {
 	 * @return 初期化後の UserInfoRegisterFormDetail
 	 */
 	public UserInfoRegisterFormDetail FormReset(UserInfoRegisterFormDetail form) {
-		form.setNameErrFlg(false);
-		form.setNameErrMsg("");
-		form.setPositionErrFlg(false);
-		form.setPositionErrMsg("");
-		form.setBasicSalaryErrFlg(false);
-		form.setBasicSalaryErrMsg("");
+
 		form.setMessage("");
 		form.setSelectPosition(stringUtils.itemColumnsShaping(form.getSelectPosition()));
 		return form;
+
 	}
 
 }

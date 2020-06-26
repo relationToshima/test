@@ -2,6 +2,8 @@ package com.example.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,12 +29,45 @@ public class UserInfoUpdateController {
 	 * @return
 	 */
 	@RequestMapping(value = "UserInfoUpdate", params = "back", method = RequestMethod.POST)
-	public ModelAndView UserInfoUpdateBack(ModelAndView mav) {
-		UserInfoUpdateListFormDetail userInfoUpdateListFormDetail = new UserInfoUpdateListFormDetail();
-		userInfoUpdateListFormDetail
-				.setUserInfoUpdateListFormList(userInfoUpdateListServiceImpl.UserInfoSelectForUpdateList());
+	public ModelAndView UserInfoUpdateBack(@ModelAttribute UserInfoUpdateFormDetail userInfoUpdateFormDetail,
+			ModelAndView mav) {
+
+		UserInfoUpdateListFormDetail userInfoUpdateListFormDetail = userInfoUpdateServiceImpl
+				.UserInfoUpdateBack(userInfoUpdateFormDetail);
+
 		mav.addObject("userInfoUpdateListFormDetail", userInfoUpdateListFormDetail);
 		mav.setViewName("UserInfoUpdateList");
+		return mav;
+	}
+
+	/**
+	 * ImageUploadメソッド
+	 * 画像のアップロードを行う.
+	 * @param userInfoRegisterFormDetail
+	 * @param mav
+	 * @return
+	 */
+	@RequestMapping(value = "/UserInfoUpdate", params = "imageUpload", method = RequestMethod.POST)
+	public ModelAndView ImageUpload(@ModelAttribute UserInfoUpdateFormDetail userInfoUpdateFormDetail,
+			ModelAndView mav) {
+
+		userInfoUpdateFormDetail = userInfoUpdateServiceImpl.imageUpload(userInfoUpdateFormDetail);
+
+		/*エラーフラグ　エラーメッセージ　メッセージ　プルダウン　初期化*/
+		userInfoUpdateFormDetail = userInfoUpdateServiceImpl.formReset(userInfoUpdateFormDetail);
+		mav.setViewName("UserInfoUpdate");
+		return mav;
+	}
+
+	@RequestMapping(value = "/UserInfoUpdate", params = "imageDelete", method = RequestMethod.POST)
+	public ModelAndView ImageDelete(@ModelAttribute UserInfoUpdateFormDetail userInfoUpdateFormDetail,
+			ModelAndView mav) {
+
+		userInfoUpdateFormDetail = userInfoUpdateServiceImpl.imageDelete(userInfoUpdateFormDetail);
+
+		/*エラーフラグ　エラーメッセージ　メッセージ　プルダウン　初期化*/
+		userInfoUpdateFormDetail = userInfoUpdateServiceImpl.formReset(userInfoUpdateFormDetail);
+		mav.setViewName("UserInfoUpdate");
 		return mav;
 	}
 
@@ -45,8 +80,16 @@ public class UserInfoUpdateController {
 	 */
 	@RequestMapping(value = "UserInfoUpdate", params = "submit", method = RequestMethod.POST)
 	public ModelAndView UserInfoUpdate(
-			@ModelAttribute("userInfoUpdateFormDetail") UserInfoUpdateFormDetail userInfoUpdateFormDetail,
-			ModelAndView mav) {
+			@Validated @ModelAttribute UserInfoUpdateFormDetail userInfoUpdateFormDetail,
+			BindingResult result, ModelAndView mav) {
+
+		//入力値にエラーがある場合
+		if (result.hasErrors()) {
+			/*エラーフラグ　エラーメッセージ　メッセージ　プルダウン　初期化*/
+			userInfoUpdateFormDetail = userInfoUpdateServiceImpl.formReset(userInfoUpdateFormDetail);
+			mav.setViewName("UserInfoUpdate");
+			return mav;
+		}
 
 		userInfoUpdateFormDetail = userInfoUpdateServiceImpl.UserInfoUpdate(userInfoUpdateFormDetail);
 		mav.addObject("userInfoUpdateFormDetail", userInfoUpdateFormDetail);

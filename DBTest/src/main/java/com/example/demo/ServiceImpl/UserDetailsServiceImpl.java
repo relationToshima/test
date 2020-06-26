@@ -26,34 +26,38 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	StringUtils stringUtils;
 
 	@Override
-	public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String mailAddress) throws UsernameNotFoundException {
 
 		//DB確認
-		LoginUser user = userInfoMapper.selectUserAuth(userId);
+		LoginUser user = userInfoMapper.selectUserAuth(mailAddress);
 
 		if (user == null) {
 
-			throw new UsernameNotFoundException("社員番号：" + userId + "は登録がありません。");
+			throw new UsernameNotFoundException("メールアドレス：" + mailAddress + "は登録がありません。");
 
 		}
 
 		//トリム
 		user.setName(stringUtils.trim(user.getName()));
+		user.setMailAddress(stringUtils.trim(user.getMailAddress()));
 		user.setPassword(stringUtils.trim(user.getPassword()));
 		user.setPosition(stringUtils.trim(user.getPosition()));
 
-		//権限のリスト
-		//AdminやUserなどが存在するが、今回は利用しないのでUSERのみを仮で設定
-		//権限を利用する場合は、DB上で権限テーブル、ユーザ権限テーブルを作成し管理が必要
+		//権限
 		List<GrantedAuthority> grantList = new ArrayList<GrantedAuthority>();
-		GrantedAuthority authority = new SimpleGrantedAuthority("USER");
+		GrantedAuthority authority = null;
+		if (user.getPosition().equals("Administrater")) {
+			authority = new SimpleGrantedAuthority("ROLE_ADMIN");
+		} else {
+			authority = new SimpleGrantedAuthority("ROLE_USER");
+		}
 		grantList.add(authority);
 
-		//rawDataのパスワードは渡すことができないので、暗号化
+		//エンコーダー
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-		//UserDetailsはインタフェースなのでUserクラスのコンストラクタで生成したユーザオブジェクトをキャスト
-		UserDetails userDetails = (UserDetails) new User(user.getName(), encoder.encode(user.getPassword()),
+		UserDetails userDetails = (UserDetails) new User(user.getName() + "/" + user.getId(),
+				encoder.encode(user.getPassword()),
 				grantList);
 
 		return userDetails;

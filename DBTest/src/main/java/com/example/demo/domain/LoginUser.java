@@ -12,6 +12,8 @@ public class LoginUser {
 	String id;
 	/** 氏名 **/
 	String name;
+	/** メールアドレス **/
+	String mailAddress;
 	/** パスワード **/
 	String password;
 	/** 役職 **/

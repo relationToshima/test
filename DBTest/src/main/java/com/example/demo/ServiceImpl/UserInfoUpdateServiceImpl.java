@@ -1,17 +1,35 @@
 package com.example.demo.ServiceImpl;
 
+import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.imageio.ImageIO;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.constants.ConstantsData;
 import com.example.demo.constants.message.ConstantsMsg;
 import com.example.demo.formDetail.UserInfoUpdateFormDetail;
+import com.example.demo.formDetail.UserInfoUpdateListFormDetail;
 import com.example.demo.mapper.SalaryInfoMapper;
 import com.example.demo.mapper.UserInfoMapper;
 import com.example.demo.service.UserInfoUpdateService;
+import com.example.demo.utils.ImageUtils;
 import com.example.demo.utils.StringUtils;
 
 @Service
@@ -23,6 +41,10 @@ public class UserInfoUpdateServiceImpl implements UserInfoUpdateService {
 	SalaryInfoMapper salaryInfoMapper;
 	@Autowired
 	StringUtils stringUtils;
+	@Autowired
+	ImageUtils imageUtils;
+	@Autowired
+	UserInfoUpdateListServiceImpl userInfoUpdateListServiceImpl;
 
 	@Override
 	public UserInfoUpdateFormDetail UserInfoUpdateInit(String id) {
@@ -30,14 +52,114 @@ public class UserInfoUpdateServiceImpl implements UserInfoUpdateService {
 		//データの取得
 		UserInfoUpdateFormDetail userInfoUpdateFormDetail = userInfoMapper.selectUserInfoForUpdate(id);
 
+		File file = new File(ConstantsData.FILE_UPLOAD_PATH);
+		if (!(file.exists())) {
+			file.mkdir();
+		}
+
+		imageUtils.DeleteUploadFile();
+
+		//画像表示用変換＋uploadFileに画像をダウンロード
+		if (!(stringUtils.isEmpty(userInfoUpdateFormDetail.getImageName()))) {
+			try {
+				userInfoUpdateFormDetail.setImageOutput(imageUtils.GetImageOutputString(
+						userInfoUpdateFormDetail.getImageName(), userInfoUpdateFormDetail.getImageData()));
+			} catch (UnsupportedEncodingException e) {
+				userInfoUpdateFormDetail.setImageErrMessage("エンコードに失敗しました。");
+				e.printStackTrace();
+			}
+
+			Path uploadfilePath = Paths
+					.get(ConstantsData.FILE_UPLOAD_PATH + "\\" + userInfoUpdateFormDetail.getImageName());
+			try (OutputStream os = Files.newOutputStream(uploadfilePath, StandardOpenOption.CREATE)) {
+
+				os.write(userInfoUpdateFormDetail.getImageData());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		//基本給の型変換
 		userInfoUpdateFormDetail.setBasicSalaryStr(String.valueOf(userInfoUpdateFormDetail.getBasicSalary()));
 
 		//役職のプルダウンを設定
 		userInfoUpdateFormDetail.setSelectPosition(itemReturn());
 
-		//データのトリム
-		userInfoUpdateFormDetail = UserInfoUpdateFormDetailAllTrim(userInfoUpdateFormDetail);
+		return userInfoUpdateFormDetail;
+	}
+
+	@Override
+	public UserInfoUpdateListFormDetail UserInfoUpdateBack(UserInfoUpdateFormDetail userInfoUpdateFormDetail) {
+
+		//一覧に戻るために再検索
+		UserInfoUpdateListFormDetail userInfoUpdateListFormDetail = new UserInfoUpdateListFormDetail();
+		userInfoUpdateListFormDetail
+				.setUserInfoUpdateListFormList(userInfoUpdateListServiceImpl.UserInfoSelectForUpdateList());
+
+		imageUtils.DeleteUploadFile();
+
+		return userInfoUpdateListFormDetail;
+
+	}
+
+	@Override
+	public UserInfoUpdateFormDetail imageUpload(UserInfoUpdateFormDetail form) {
+
+		//０バイト、未選択チェック
+		if (form.getImage().isEmpty()) {
+			form.setImageErrMessage("選択された画像が不正、または選択されていません。");
+			return form;
+		}
+
+		//拡張子チェック（JPEG/PNG/GIF許容）
+		String extension = form.getImage().getOriginalFilename()
+				.substring(form.getImage().getOriginalFilename().lastIndexOf(".") + 1);
+		if (!(extension.equalsIgnoreCase("JPEG") || extension.equalsIgnoreCase("JPG")
+				|| extension.equalsIgnoreCase("PNG"))) {
+			form.setImageErrMessage(
+					"選択された画像の拡張子が不正です。許容されている拡張子は「JPEG(JPG)」「PNG」です。");
+			return form;
+		}
+
+		//チェックOK＋アップロード
+		form.setImageName(form.getImage().getOriginalFilename());
+		Path uploadfilePath = Paths.get(ConstantsData.FILE_UPLOAD_PATH + "\\" + form.getImageName());
+		try (OutputStream os = Files.newOutputStream(uploadfilePath, StandardOpenOption.CREATE)) {
+			byte[] bytes = form.getImage().getBytes();
+			os.write(bytes);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		//画像表示用変換
+		if (!(stringUtils.isEmpty(form.getImageName()))) {
+			try {
+				form.setImageOutput(imageUtils.GetImageOutputString(
+						form.getImageName(), form.getImage().getBytes()));
+			} catch (IOException e) {
+				form.setImageErrMessage("エンコードに失敗しました。");
+				e.printStackTrace();
+			}
+		}
+
+		//MultipartFile型 image はもう不要なので削除
+		form.setImage(null);
+
+		return form;
+
+	}
+
+	@Override
+	public UserInfoUpdateFormDetail imageDelete(UserInfoUpdateFormDetail userInfoUpdateFormDetail) {
+
+		//画像関連のデータをすべて削除
+		userInfoUpdateFormDetail.setImage(null);
+		userInfoUpdateFormDetail.setImageName(null);
+		userInfoUpdateFormDetail.setImageOutput(null);
+		userInfoUpdateFormDetail.setImageErrMessage(null);
+		userInfoUpdateFormDetail.setImageData(null);
+
+		//uploadFileにデータがある場合、削除
+		imageUtils.DeleteUploadFile();
 
 		return userInfoUpdateFormDetail;
 	}
@@ -51,45 +173,36 @@ public class UserInfoUpdateServiceImpl implements UserInfoUpdateService {
 		//入力データのトリム
 		userInfoUpdateFormDetail = UserInfoUpdateFormDetailAllTrim(userInfoUpdateFormDetail);
 
-		/*データチェック*/
-		//氏名（必須チェック）
-		if (stringUtils.isEmpty(userInfoUpdateFormDetail.getName())) {
-			userInfoUpdateFormDetail.setNameErrFlg(true);
-			userInfoUpdateFormDetail.setNameErrMsg("氏名" + ConstantsMsg.ERR_MSG_NULL);
-		}
-
-		//役職（必須チェック）
-		if (stringUtils.isEmpty(userInfoUpdateFormDetail.getPosition())) {
-			userInfoUpdateFormDetail.setPositionErrFlg(true);
-			userInfoUpdateFormDetail.setPositionErrMsg("役職" + ConstantsMsg.ERR_MSG_NULL);
-		}
-
-		//基本給（必須チェック＋数値チェック）
-		if (stringUtils.isEmpty(userInfoUpdateFormDetail.getBasicSalaryStr())) {
-			userInfoUpdateFormDetail.setBasicSalaryErrFlg(true);
-			userInfoUpdateFormDetail.setBasicSalaryErrMsg("基本給" + ConstantsMsg.ERR_MSG_NULL);
-		} else if (!(stringUtils.isNum(userInfoUpdateFormDetail.getBasicSalaryStr()))) {
-			userInfoUpdateFormDetail.setBasicSalaryErrFlg(true);
-			userInfoUpdateFormDetail.setBasicSalaryErrMsg("基本給" + ConstantsMsg.ERR_MSG_NOT_NUM);
-		}
-
-		//いずれかの項目でエラーがあった場合、返却する
-		if (userInfoUpdateFormDetail.isNameErrFlg() == true
-				|| userInfoUpdateFormDetail.isPositionErrFlg() == true
-				|| userInfoUpdateFormDetail.isBasicSalaryErrFlg() == true) {
-			return userInfoUpdateFormDetail;
-		}
-
+		//更新者の設定
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		userInfoUpdateFormDetail.setUpdater(auth.getName());
 		//更新日の設定
 		userInfoUpdateFormDetail.setUpdatedDate(Date.valueOf(stringUtils.getNowDate()));
 		//基本給の設定
 		userInfoUpdateFormDetail.setBasicSalary(Integer.parseInt(userInfoUpdateFormDetail.getBasicSalaryStr()));
-
-		//DB比較したい
+		//画像データを設定
+		try {
+			String s = ConstantsData.FILE_UPLOAD_PATH + "\\" + userInfoUpdateFormDetail.getImageName();
+			BufferedImage bImage = ImageIO
+					.read(new File(s));
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			BufferedOutputStream os = new BufferedOutputStream(bos);
+			bImage.flush();
+			//拡張子の取得
+			String extension = userInfoUpdateFormDetail.getImageName()
+					.substring(userInfoUpdateFormDetail.getImageName().lastIndexOf(".") + 1);
+			ImageIO.write(bImage, extension, os); //. png 型
+			userInfoUpdateFormDetail.setImageData(bos.toByteArray());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		//更新
 		userInfoMapper.updateUserInfo(userInfoUpdateFormDetail);
 		salaryInfoMapper.updateSalaryInfo(userInfoUpdateFormDetail);
+
+		//画像データは重いので削除
+		userInfoUpdateFormDetail.setImageData(null);
 
 		userInfoUpdateFormDetail.setMessage(ConstantsMsg.MSG_UPDATE_OK);
 
@@ -134,12 +247,7 @@ public class UserInfoUpdateServiceImpl implements UserInfoUpdateService {
 	}
 
 	public UserInfoUpdateFormDetail formReset(UserInfoUpdateFormDetail form) {
-		form.setNameErrFlg(false);
-		form.setNameErrMsg("");
-		form.setPositionErrFlg(false);
-		form.setPositionErrMsg("");
-		form.setBasicSalaryErrFlg(false);
-		form.setBasicSalaryErrMsg("");
+
 		form.setMessage("");
 		form.setSelectPosition(stringUtils.itemColumnsShaping(form.getSelectPosition()));
 		return form;

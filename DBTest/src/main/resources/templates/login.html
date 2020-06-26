@@ -6,14 +6,16 @@
 </head>
 <body>
 	<form th:action="@{/sign_in}" method="post">
-		<p>社員番号</p>
-		<p><input type="text" name="userName"></p>
+		<p>メールアドレス</p>
+		<p><input type="text" name="mailAddress"></p>
 
 		<p>パスワード</p>
         <p><input type="password" name="password"></p>
 
         <input type="submit" value="Login"></input>
     </form>
-    <p th:if="${param.error}">社員番号またはパスワードに誤りがあります</p>
+    <p th:if="${param.error}">メールアドレスまたはパスワードに誤りがあります。</p>
+    <p th:if="${param.logout}">ログアウトしました。</p>
+    <p th:if="${param.timeout}">タイムアウトしました。</p>
 </body>
 </html>

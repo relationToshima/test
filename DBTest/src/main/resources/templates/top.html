@@ -1,29 +1,50 @@
 
-<html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
 <meta charset="utf-8" />
 <title>社員情報管理トップ</title>
 </head>
 <body>
 	<form th:action="@{/logout}" method="post">
-	    <button type="submit">ログアウト</button>
+		こんにちは！<span sec:authentication="principal.username"></span>さん
+	    <button type="submit">ログアウト</button><br>
 	</form>
 	<form th:action="@{/top}" method="POST">
 
 		<table border="1">
 			<tr>
 				<td><input type = "submit" name = "register" value = "新規社員登録"></input></td>
+				<td>新規社員の追加を行えます。<br>
+				    ※社員番号は自動採番です。</td>
+
+			</tr>
+			<tr>
 				<td><input type = "submit" name = "salaryList" value = "給与情報一覧"></input></td>
+				<td>給与情報が確認できます。<br>
+					※他社員の情報を確認するには、管理者権限が必要です。</td>
 			</tr>
 			<tr>
 				<td><input type = "submit" name = "update" value = "社員情報更新"></input></td>
-				<td><input type = "submit" name = "delete" value = "社員情報削除"></input></td>
+				<td>社員情報の更新が行えます。<br>
+					※他社員の情報を更新するには、管理者権限が必要です。</td>
 			</tr>
 			<tr>
 				<td><input type = "submit" name = "search" value = "社員情報検索"></input></td>
+				<td>社員情報の検索が行えます。<br>　</td>
+			</tr>
+			<tr>
+				<td>
+					 <div sec:authorize="hasRole('ROLE_ADMIN')">
+						<input type = "submit" name = "delete" value = "社員情報削除"></input>
+					</div>
+					 <div sec:authorize="hasRole('ROLE_USER')">
+						<input type = "submit" name = "delete" value = "社員情報削除" disabled></input>
+					</div>
+				</td>
+				<td>社員情報の削除が行えます。<br>
+					※削除には管理者権限が必要です。</td>
 			</tr>
 		</table>
-
 	</form>
 </body>
 </html>

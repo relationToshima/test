@@ -18,6 +18,7 @@ import com.example.demo.formDetail.UserInfoDeleteFormDetail;
 import com.example.demo.formDetail.UserInfoRegisterFormDetail;
 import com.example.demo.formDetail.UserInfoSearchFormDetail;
 import com.example.demo.formDetail.UserInfoUpdateListFormDetail;
+import com.example.demo.utils.ImageUtils;
 
 @Controller
 public class topController {
@@ -32,6 +33,8 @@ public class topController {
 	UserInfoDeleteServiceImpl userInfoDeleteServiceImpl;
 	@Autowired
 	UserInfoSearchServiceImpl userInfoSearchServiceImpl;
+	@Autowired
+	ImageUtils imageUtils;
 
 	/**
 	 * topメソッド
@@ -53,6 +56,7 @@ public class topController {
 	@RequestMapping(value = "/top", params = "register", method = RequestMethod.POST)
 	public ModelAndView TopGoToRegister(ModelAndView mav) {
 		UserInfoRegisterFormDetail userInfoRegisterFormDetail = userInfoRegisterServiceImpl.UserInfoRegisterInit();
+		imageUtils.DeleteUploadFile();
 		mav.addObject("userInfoRegisterFormDetail", userInfoRegisterFormDetail);
 		mav.setViewName("userInfoRegister");
 		return mav;
@@ -75,7 +79,7 @@ public class topController {
 
 	/**
 	 * TopGoToUpdateメソッド
-	 * 社員情報更新画面に遷移する.
+	 * 社員情報更新一覧画面に遷移する.
 	 * @param mav
 	 * @return
 	 */

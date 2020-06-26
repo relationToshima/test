@@ -9,8 +9,10 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 
 import com.example.demo.ServiceImpl.UserDetailsServiceImpl;
+import com.example.demo.security.SessionExpiredDetectingLoginUrlAuthenticationEntryPoint;
 
 @Configuration
 @EnableWebSecurity
@@ -43,23 +45,32 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.formLogin()
 				.loginPage("/login") //ログインページはコントローラを経由しないのでViewNameとの紐付けが必要
 				.loginProcessingUrl("/sign_in") //フォームのSubmitURL、このURLへリクエストが送られると認証処理が実行される
-				.usernameParameter("userName") //リクエストパラメータのname属性を明示
+				.usernameParameter("mailAddress") //リクエストパラメータのname属性を明示
 				.passwordParameter("password")
-				.successForwardUrl("/top")
-				.failureUrl("/login?error");
+				.successForwardUrl("/top")//認証成功時
+				.failureUrl("/login?error");//認証失敗時
 		//.permitAll();
 
 		http.logout()
 				.logoutUrl("/logout")
-				.logoutSuccessUrl("/login")
-				.deleteCookies("JSESSIONID"); // ログアウト完了後Cookieを破棄する
+				.logoutSuccessUrl("/login?logout")
+				.deleteCookies("JSESSIONID") // ログアウト完了後Cookieを破棄する
+				.invalidateHttpSession(true);//ログアウト完了後セッションを破棄する
 		//.permitAll();
+
+		http.exceptionHandling()
+				.authenticationEntryPoint(authenticationEntryPoint());//タイムアウトした際に判定できるようにする
+	}
+
+	@Bean
+	AuthenticationEntryPoint authenticationEntryPoint() {
+		return new SessionExpiredDetectingLoginUrlAuthenticationEntryPoint("/login");
 	}
 
 	@Autowired
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
 
-		//DB二登録されているidとpasswordで認証
+		//DBに登録されているidとpasswordで認証
 		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
 
 	}

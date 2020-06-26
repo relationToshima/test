@@ -14,7 +14,9 @@ public interface UserInfoMapper {
 
 	List<UserInfoDeleteForm> selectIdNameForDelete();
 
-	List<UserInfoUpdateListForm> selectIdNameForUpdateList();
+	List<UserInfoUpdateListForm> selectUserInfoForUpdateList();
+
+	List<UserInfoUpdateListForm> selectUserInfoForUpdateListOnlyMe(String id);
 
 	UserInfoUpdateFormDetail selectUserInfoForUpdate(String id);
 
@@ -28,5 +30,7 @@ public interface UserInfoMapper {
 
 	List<UserInfoSearchForm> selectUserInfoForSearch();
 
-	LoginUser selectUserAuth(String id);
+	LoginUser selectUserAuth(String mailAddress);
+
+	int selectMailAddressCount(String mailAddress);
 }

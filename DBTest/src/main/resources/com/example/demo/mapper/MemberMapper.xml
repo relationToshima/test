@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EM" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.mapper.MemberMapper">
 
-	<select id="selectNamePositionSalaryFromMember" resultType="com.example.demo.domain.OfficeWorker">
+	<select id="selectSalaryInfoToMember" resultType="com.example.demo.domain.OfficeWorker">
 		select
 			name,
 			position,
@@ -11,8 +11,23 @@
 		from
 			salaryinfo,
 			userinfo
-		WHERE
-		salaryinfo.id = userinfo.id and
-		position = 'Member'
+		where
+			salaryinfo.id = userinfo.id and
+			position = 'Member'
+	</select>
+
+	<select id="selectSalaryInfoToMemberOnlyMe" resultType="com.example.demo.domain.OfficeWorker">
+		select
+			name,
+			position,
+			basicsalary,
+			basicsalary as basicSalaryAddPositionAllowance
+		from
+			salaryinfo,
+			userinfo
+		where
+			salaryinfo.id = userinfo.id and
+			position = 'Member' and
+			userinfo.id = #{id}
 	</select>
 </mapper>

@@ -6,7 +6,8 @@
 </head>
 <body>
 	<form th:action="@{/logout}" method="post">
-	    <button type="submit">ログアウト</button>
+		こんにちは！<span sec:authentication="principal.username"></span>さん
+	    <button type="submit">ログアウト</button><br>
 	</form>
 	<form th:action="@{/UserInfoUpdateList}" th:object="${userInfoUpdateListFormDetail}" method="POST">
 		<p>
@@ -16,19 +17,21 @@
 
 		<table border="1">
 			<tr>
+				<th>#</th>
 				<th>更新対象</th>
-				<th>ID</th>
-				<th>名前</th>
+				<th>社員番号</th>
+				<th>氏名　</th>
 			</tr>
 			<tr th:each="data , stat : ${userInfoUpdateListFormDetail.userInfoUpdateListFormList}">
-				<td>
+				<th th:text="${stat.count}"></th>
+				<td  align="center">
 					<input type="radio" name="radio" th:value="${data.id}" th;field="userInfoUpdateFormDetail"></input>
 				</td>
-				<td>
+				<td  align="center">
 					<p th:text="${data.id}"></p>
 					<input type ="hidden" th:name="userInfoUpdateListFormList[__${stat.index}__].id" th:value="${data.id}"></input>
 				</td>
-				<td>
+				<td  align="center">
 					<p th:text ="${data.name}"></p>
 					<input type ="hidden" th:name="userInfoUpdateListFormList[__${stat.index}__].name" th:value="${data.name}"></input>
 				</td>

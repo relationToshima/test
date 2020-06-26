@@ -34,4 +34,8 @@ public class UserInfo {
 	private String updater;
 	/** 更新日 */
 	private Date updatedDate;
+	/** 画像名 **/
+	private String imageName;
+	/** 画像 **/
+	private byte[] imageData;
 }

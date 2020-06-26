@@ -18,24 +18,6 @@ public class UserInfoUpdateFormDetail extends UserInfoUpdateForm {
 	/** 役職プルダウン **/
 	List<String> selectPosition;
 
-	/** 氏名　エラーメッセージ **/
-	String nameErrMsg;
-	/** 役職　エラーメッセージ **/
-	String positionErrMsg;
-	/** 基本給　エラーメッセージ **/
-	String basicSalaryErrMsg;
-
-	/** 氏名　エラーステータス **/
-	boolean nameErrFlg;
-	/** 役職　エラーステータス **/
-	boolean positionErrFlg;
-	/** 基本給　エラーステータス **/
-	boolean basicSalaryErrFlg;
-
-	public UserInfoUpdateFormDetail() {
-		this.setNameErrFlg(false);
-		this.setPositionErrFlg(false);
-		this.setBasicSalaryErrFlg(false);
-	}
-
+	/** 画像エラーメッセージ **/
+	String imageErrMessage;
 }

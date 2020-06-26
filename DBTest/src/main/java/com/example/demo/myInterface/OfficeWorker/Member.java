@@ -17,8 +17,15 @@ public class Member implements OfficeWorkerInterface {
 
 	public List<OfficeWorker> DBSelect() {
 
-		List<OfficeWorker> menberList = memberMapper.selectNamePositionSalaryFromMember();
+		List<OfficeWorker> menberList = memberMapper.selectSalaryInfoToMember();
 		return menberList;
+	}
+
+	public List<OfficeWorker> DBSelect(String id) {
+
+		List<OfficeWorker> menberList = memberMapper.selectSalaryInfoToMemberOnlyMe(id);
+		return menberList;
+
 	}
 
 }

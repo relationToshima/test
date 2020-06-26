@@ -6,9 +6,10 @@
 </head>
 <body>
 	<form th:action="@{/logout}" method="post">
-	    <button type="submit">ログアウト</button>
+		こんにちは！<span sec:authentication="principal.username"></span>さん
+	    <button type="submit">ログアウト</button><br>
 	</form>
-	<form th:action="@{/UserInfoUpdate}" th:object="${userInfoUpdateFormDetail}" method="POST">
+	<form th:action="@{/UserInfoUpdate}" enctype="multipart/form-data" th:object="${userInfoUpdateFormDetail}" method="POST">
 		<p>
 			<input type = "submit" name = "back" value = "戻る"></input>
 			<span th:text="${userInfoUpdateFormDetail.message}"></span>
@@ -39,7 +40,7 @@
 					</table>
 				</td>
 				<td>
-					<p th:text="*{nameErrMsg}"></p>
+					<p th:if="${#fields.hasErrors('*{name}')}" th:errors="*{name}"></p>
 				</td>
 			</tr>
 			<tr>
@@ -65,7 +66,7 @@
 					</table>
 				</td>
 				<td>
-					<!-- パスワード -->
+					<p th:if="${#fields.hasErrors('*{password}')}" th:errors="*{password}"></p>
 				</td>
 			</tr>
 			<tr>
@@ -84,9 +85,10 @@
 					</table>
 				</td>
 				<td>
-					<p th:text="*{positionErrMsg}"></p>
+					<p th:if="${#fields.hasErrors('*{position}')}" th:errors="*{position}"></p>
 				</td>
 			</tr>
+			<tr>
 				<td>
 					<table border="1" style="width: 500px;">
 						<tr>
@@ -96,17 +98,45 @@
 					</table>
 				</td>
 				<td>
-					<p th:text="*{basicSalaryErrMsg}"></p>
+					<p th:if="${#fields.hasErrors('*{basicSalaryStr}')}" th:errors="*{basicSalaryStr}"></p>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<table border="1" style="width: 500px;">
+						<tr>
+							<th style="width: 30%;">
+								<div>
+									<p>画像</p>
+									<p th:unless="*{imageName}"  align="center">
+										<input type="submit" name="imageUpload" value="アップロード"></input>
+									</p>
+									<p  th:if="*{imageName}"  align="center">
+										<input type="submit" name="imageDelete" value="取り消し"></input>
+									</p>
+								</div>
+							</th>
+							<td style="width: 70%;"  align="center">
+								<p th:unless="*{imageName}">
+									<input type="file" name="image" th:value="*{image}" style="width: 100%;"></input>
+								</p>
+								<div th:if="*{imageName}"  align="center">
+									<p th:text="*{imageName}"></p>
+									<img th:src="*{imageOutput}" width="200" height="200">
+									<input type="hidden" name="imageName" th:value="*{imageName}"></input>
+
+									<input type="hidden" name="imageOutput" th:value="*{imageOutput}"></input>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td>
+					<p th:text="*{imageErrMessage}"></p>
 				</td>
 			</tr>
 		</table>
-		<br>
-		<table border="1" style="width: 500px;">
-			<tr>
-				<th style="width: 30%;">更新者氏名</th>
-				<td style="width: 70%;"><input type="text" name="updater" th:value="*{updater}" style="width: 100%;"></input></td>
-			</tr>
-		</table>
+
 		<br>
 		<input type="submit" name="submit" value="更新"></input>
 	</form>

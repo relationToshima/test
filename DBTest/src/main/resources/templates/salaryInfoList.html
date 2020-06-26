@@ -6,7 +6,8 @@
 </head>
 <body>
 	<form th:action="@{/logout}" method="post">
-	    <button type="submit">ログアウト</button>
+		こんにちは！<span sec:authentication="principal.username"></span>さん
+	    <button type="submit">ログアウト</button><br>
 	</form>
 	<form th:action="@{/SalaryInfoList}" method="POST">
 		<input type = "submit" name = "back" value = "戻る"></input>
@@ -14,16 +15,18 @@
 	<p th:text="${result}"></p>
 	<table border="1">
 		<tr>
+			<th>#</th>
 			<th>名前</th>
 			<th>役職</th>
 			<th>基本給</th>
 			<th>基本給＋役職手当</th>
 		</tr>
-		<tr th:each="data : ${data}">
-			<td th:text="${data.name}"></td>
-			<td th:text="${data.position}"></td>
-			<td th:text="${data.basicSalary}"></td>
-			<td th:text="${data.basicSalaryAddPositionAllowance}"></td>
+		<tr th:each="data , stat: ${data}">
+			<th th:text="${stat.count}"></th>
+			<td  align="center" th:text="${data.name}"></td>
+			<td  align="center" th:text="${data.position}"></td>
+			<td  align="center" th:text="${data.basicSalary}"></td>
+			<td  align="center" th:text="${data.basicSalaryAddPositionAllowance}"></td>
 		</tr>
 	</table>
 </body>

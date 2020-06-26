@@ -18,12 +18,23 @@
 		order by id asc
 	</select>
 
-	<select id="selectIdNameForUpdateList" resultType="com.example.demo.form.UserInfoUpdateListForm">
+	<select id="selectUserInfoForUpdateList" resultType="com.example.demo.form.UserInfoUpdateListForm">
 		select
 			id,
 			name
 		from
 			userinfo
+		order by id asc
+	</select>
+
+	<select id="selectUserInfoForUpdateListOnlyMe" resultType="com.example.demo.form.UserInfoUpdateListForm">
+		select
+			id,
+			name
+		from
+			userinfo
+		where
+			id = #{id}
 		order by id asc
 	</select>
 
@@ -35,7 +46,9 @@
 			mailAddress,
 			password,
 			position,
-			basicSalary
+			basicSalary,
+			imageName,
+			imageData
 		from
 			userinfo,
 			salaryinfo
@@ -54,7 +67,9 @@
 			mailaddress = #{mailAddress},
 			password = #{password},
 			updater = #{updater},
-			updateddate = #{updatedDate}
+			updateddate = #{updatedDate},
+			imagename = #{imageName},
+			imagedata = #{imageData}
 		where
 			id = #{id}
 	</update>
@@ -82,16 +97,22 @@
 				name,
 				mailaddress,
 				password,
+				failuretimes,
 				registrant,
-				registrationdate)
+				registrationdate,
+				imagename,
+				imagedata)
 		values (
 			#{id},
 			#{nameReading},
 			#{name},
 			#{mailAddress},
 			#{password},
+			#{failureTimes},
 			#{registrant},
-			#{registrationDate})
+			#{registrationDate},
+			#{imageName},
+			#{imageData})
 	</insert>
 
 	<select id="selectUserInfoForSearch" resultType="com.example.demo.form.UserInfoSearchForm">
@@ -119,6 +140,7 @@
 		select
 			userinfo.id,
 			name,
+			mailaddress,
 			password,
 			position
 		from
@@ -126,7 +148,16 @@
 			salaryinfo
 		where
 			userinfo.id = salaryinfo.id and
-			userinfo.id = #{id}
+			userinfo.mailaddress = #{mailAddress}
+	</select>
+
+	<select id="selectMailAddressCount" resultType="int">
+	select
+		count(mailaddress)
+	from
+		userinfo
+	where
+		mailaddress = #{mailAddress}
 	</select>
 
 </mapper>

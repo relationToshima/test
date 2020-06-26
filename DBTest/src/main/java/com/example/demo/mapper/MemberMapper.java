@@ -8,5 +8,7 @@ import com.example.demo.domain.OfficeWorker;
 
 @Component
 public interface MemberMapper {
-	List<OfficeWorker> selectNamePositionSalaryFromMember();
+	List<OfficeWorker> selectSalaryInfoToMember();
+
+	List<OfficeWorker> selectSalaryInfoToMemberOnlyMe(String id);
 }
